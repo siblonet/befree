@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "agriculture",
+    "name": "Befree Africa",
     "slug": "agriculture",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,16 +12,20 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "gnimis.tirhaka",
+      "buildNumber": "1"
     },
     "android": {
+      "versionCode": 1,
+      "package": "gnimis.befree",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }
