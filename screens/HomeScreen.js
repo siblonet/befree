@@ -75,7 +75,7 @@ const datoo = [
 
 
 export default function DashBoard({ navigation }) {
-  const [username, setusername] = useState('John Kokar');
+  const [username, setusername] = useState('');
 
 
   const [data, setData] = useState([]);
