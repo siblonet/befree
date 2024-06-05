@@ -39,10 +39,9 @@ export default function ConneXion({ navigation }) {
 
         try {
             if (phone && password) {
-                const response = await axios.post(`${routx.Baseurl}/connexion`, person);
-                console.log(response.data)
-                if (response.data) {
-                    saveData(response.name)
+                const response = await axios.post(`${routx.Baseurl}/signin/`, person);
+                if (response.data.last_name) {
+                    saveData(response.last_name+" "+response.first_name)
                     setIsLoaded(false);
 
                 } else {

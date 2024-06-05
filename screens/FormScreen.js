@@ -35,11 +35,8 @@ export default function FormScreen({ navigation }) {
 
   const handleSubmit = () => {
     setSending(true);
-    axios.post(`${routx.Baseurl}/enrollement`, formState)
-      .then(response => {
-        console.log(response.data);
-        navigation.goBack();
-      })
+    axios.post(`${routx.Baseurl}/manage-operateurs/`, formState)
+      .then(() => navigation.goBack())
       .catch(error => {
         console.error(error);
         setSending(false);

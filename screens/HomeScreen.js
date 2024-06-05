@@ -8,13 +8,76 @@ import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
 import { picts, routx } from "../utilitis";
 
+const datoo = [
+  {
+    "annee_inspection_interne": 2023,
+    "annee_naissance": 1980,
+    "croissance_recolte": 0,
+    "district": {
+      "description": null,
+      "id": 1,
+      "name": "GAGNOA "
+    },
+    "estimation_totale_recolte": 1314,
+    "estimation_travailleurs_temporaires": 0,
+    "genre": "f",
+    "genre_proprietaire_exploitation": "",
+    "id": 1,
+    "identifiant_interne_exploitation": "GA-BIA-001",
+    "identifiant_national_exploitation": "",
+    "identifiant_unite_agricole": "GA-BIA-001 P1 ",
+    "inspecteur": {
+      "description": null,
+      "id": 1,
+      "name": "YAO N'GUESSAN LAMBERT "
+    },
+    "jour_inspection_interne": 2,
+    "latitute": "6.358055",
+    "localite": {
+      "description": null,
+      "id": 1,
+      "name": "BIAKOU"
+    },
+    "longitude": "-5.829862",
+    "mois_inspection_interne": 8,
+    "nom": "KOUSSI ",
+    "nom_proprietaire_exploitation": "",
+    "nombre_culture_certifiees": 2023,
+    "nombre_travailleurs_permanents": 0,
+    "nombre_unite_agricole": 1,
+    "numero_etat_civil": null,
+    "numero_identification_national": "C 0087 9636 26",
+    "numero_identification_national_proprietaire_exploitation": "",
+    "numero_piece_identite": "",
+    "numero_securite_sociale": "",
+    "numero_telephone": "07-48-38-44-98",
+    "numero_telephone_proprietaire_exploitation": "",
+    "prenom": "AKISSI CHANTAL",
+    "prenom_proprietaire_exploitation": "",
+    "produit_agricole": 1,
+    "recolte_totale_annee_precedente": 1312,
+    "region_inspection": {
+      "description": null,
+      "id": 1, "name": "GOH"
+    },
+    "rendement": 1,
+    "rendement_annee_precedente": 1,
+    "superficie_exploitation": 2.51,
+    "superficie_produits_agricoles": 2.51,
+    "superficie_unite_agricole": 2.51,
+    "type_exploitation_agricole": "petite",
+    "variete_produit_agricole": "",
+    "verification_latitute": "=IF(D3=0,\"\",D3)",
+    "verification_longitude": "=IF(E3=0,\"\",E3)",
+    "volume_vendu": 0
+  }
+]
+
 
 export default function DashBoard({ navigation }) {
   const [username, setusername] = useState('John Kokar');
 
 
-  const [isloaded, setIsLoaded] = useState(false);
-  const [user_id, setUser_id] = useState();
   const [data, setData] = useState([]);
   const [datao, setDatao] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,6 +85,10 @@ export default function DashBoard({ navigation }) {
   const [typin, setTypin] = useState("");
   const [isEmpty, setIsEmpty] = useState(false);
   const [nofound, setNofound] = useState(false);
+  //npx expo install expo-splash-screen expo-system-ui react-native-gesture-handler react-native-reanimated react-native-safe-area-context react-native-screens react-native-svg
+
+
+
 
   useFocusEffect(
     useCallback(() => {
@@ -29,9 +96,8 @@ export default function DashBoard({ navigation }) {
         if (await chekingCorrection()) {
           axios.get(`${routx.Baseurl}/operateurs/`)
             .then((response) => {
-              console.log(response.data);
-              //setData(response.data);
-              //setDatao(response.data);
+              setData(response.data.results);
+              setDatao(response.data.results);
             })
             .catch((error) => {
               console.error(error);
@@ -58,7 +124,7 @@ export default function DashBoard({ navigation }) {
 
   function Chertcha(typ) {
     if (datao) {
-      let filteredData = datao.filter(s => s.client.phone.startsWith(typ, 0));
+      let filteredData = datao.filter(s => s.numero_identification_national.startsWith(typ, 0));
       if (filteredData.length !== 0) {
         setIsEmpty(false);
         setData(filteredData);
@@ -73,11 +139,12 @@ export default function DashBoard({ navigation }) {
   const Reloader = () => {
     setLoadderro(false);
     setLoading(true);
-    //setData([]);
-    //setDatao([]);
+    setData([]);
+    setDatao([]);
 
-    axios.get(`${routx.Baseurl}/operateurs`).then((dat) => {
-      console.log(dat.data);
+    axios.get(`${routx.Baseurl}/operateurs/`).then((response) => {
+      setData(response.data.results);
+      setDatao(response.data.results);
       setLoading(false);
 
     }).catch((error) => {
@@ -166,32 +233,28 @@ export default function DashBoard({ navigation }) {
           )}
 
 
-          {/*data.length > 0 && data.map((appoint, index) => (
-            <View key={appoint._id} style={styles.appointmentCard}>
+          {data.length > 0 && data.map((enro, index) => (
+            <View key={enro.id} style={styles.appointmentCard}>
               <TouchableOpacity
                 style={styles.appointmentButton}
-                onPress={() => navigation.navigate("ViewOrder", { all: appoint, user_id: user_id })}
+                onPress={() => navigation.navigate("Détails", { enrol: enro })}
               >
                 <View style={styles.appointmentHeader}>
-                  <View style={styles.appointmentIndexContainer}>
-                    <View style={styles.appointmentIndexLeft} />
-                    <Text style={styles.appointmentIndexText}>{index + 1}</Text>
-                    <View style={styles.appointmentIndexRight} />
-                  </View>
-                  <View style={styles.spacingHorizontal} />
-                  <Text style={styles.appointmentTypeText}>
-                    {appoint.services.servicetype === "SALON" ? "Au salon" : "à Domicile"}
-                  </Text>
-                  <Text style={styles.appointmentPhoneText}>{appoint.client.phone}</Text>
+                  <Text style={{ color: "#aaa" }}>{index + 1}</Text>
+
+                  <Text style={styles.appointmentPhoneText}>{enro.nom} {enro.prenom}</Text>
                 </View>
+
+                <View style={styles.spacingHorizontal} />
+
                 <View style={styles.appointmentDetails}>
                   <Text style={styles.appointmentDetailsText}>
-                    Le {appoint.dete} à {appoint.heure}:00, à {appoint.client.address}
+                    {enro.district.name} - {enro.inspecteur.name}
                   </Text>
                 </View>
               </TouchableOpacity>
             </View>
-          ))*/}
+          ))}
         </ScrollView>
       </View>
 
@@ -414,39 +477,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  appointmentIndexContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  appointmentIndexLeft: {
-    width: "75%",
-    backgroundColor: "#bd177d",
-    height: 15,
-    bottom: -3,
-    opacity: 0.7,
-    borderRadius: 7,
-    alignSelf: "flex-start",
-  },
-  appointmentIndexText: {
-    fontSize: 18,
-    color: "#99e6ae",
-    fontWeight: "bold",
-    position: "absolute",
-    top: 0,
-  },
-  appointmentIndexRight: {
-    width: "75%",
-    backgroundColor: "#bd177d",
-    height: 15,
-    top: -3,
-    borderRadius: 7,
-    opacity: 0.4,
-    elevation: 5,
-    alignSelf: "flex-end",
-  },
+
   spacingHorizontal: {
-    width: 20,
+    width: '100%',
+    height: 2,
+    backgroundColor: "#eee",
+    marginVertical: 5
   },
   appointmentTypeText: {
     fontSize: 15,

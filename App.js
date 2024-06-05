@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import DashBoard from './screens/HomeScreen';
 import FormScreen from './screens/FormScreen';
 import ConneXion from './screens/Connexion';
+import DetailScreen from './screens/detailscreen';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export default function App() {
           headerShown: false
         }} />
         <Stack.Screen name="Enrôllement" component={FormScreen} />
+        <Stack.Screen name="Détails" component={DetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
