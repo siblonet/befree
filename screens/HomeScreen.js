@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { StyleSheet, ActivityIndicator, ScrollView, Text, Image, TouchableOpacity, TextInput, View, Alert } from 'react-native';
+import { StyleSheet, ActivityIndicator, ScrollView, Text, Image, TouchableOpacity, TextInput, View, Alert, Dimensions } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from "expo-linear-gradient";
@@ -84,7 +84,7 @@ export default function DashBoard({ navigation }) {
   const [loaderro, setLoadderro] = useState(false);
   const [typin, setTypin] = useState("");
   const [isEmpty, setIsEmpty] = useState(false);
-  const [nofound, setNofound] = useState(false);
+  const [loged, setLoged] = useState(false);
   //npx expo install expo-splash-screen expo-system-ui react-native-gesture-handler react-native-reanimated react-native-safe-area-context react-native-screens react-native-svg
 
 
@@ -98,6 +98,7 @@ export default function DashBoard({ navigation }) {
             .then((response) => {
               setData(response.data.results);
               setDatao(response.data.results);
+              expirationService()
             })
             .catch((error) => {
               console.error(error);
@@ -119,6 +120,24 @@ export default function DashBoard({ navigation }) {
       console.log('Error retrieving data:', error);
       return false;
     }
+  };
+
+  const expirationService = async () => {
+    const date = new Date();
+    const currentMonth = date.getMonth();
+    const yeahpe = await SecureStore.getItemAsync('befreeends');
+    if (yeahpe) {
+      const yeahpermi = yeahpe.split("-");
+      if (currentMonth <= parseInt(yeahpermi[0]) && yeahpermi[1] === "2024") {
+        setLoged(true)
+      } else {
+        setLoged(false)
+      }
+    } else {
+      setLoged(false)
+
+    }
+
   };
 
 
@@ -159,143 +178,188 @@ export default function DashBoard({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="transparent"
-        translucent={true}
-        style={"light"}
-      />
-      <View style={styles.headerContainer}>
-        <LinearGradient
-          colors={["#000", "red"]}
-          start={{ x: 0.3, y: 0.8 }}
-          end={{ x: 1.2, y: 0.8 }}
-          style={styles.headerGradient}
-        >
-          <View style={styles.headerContent}>
-            <Text style={{
-              fontSize: 28,
-              fontWeight: "bold",
-              textTransform: "capitalize",
-              color: "#e63900",
-              fontStyle: "italic"
-            }}>Be</Text>
-            <Text style={{
-              fontSize: 28,
-              fontWeight: "bold",
-              color: "#aaa",
-              fontStyle: "italic"
-            }}>free </Text>
-            <TouchableOpacity style={styles.logoButton}>
-              <Image source={picts.logo} resizeMode="contain" style={styles.logo} />
-            </TouchableOpacity>
-          </View>
-          <Text style={{
-            fontSize: 15,
-            color: "#aaa",
-          }}>{username}</Text>
-        </LinearGradient>
-      </View>
-
-      <View style={styles.headerContainerReoc}>
-
-      </View>
-
-
-      <View style={{ height: 45 }} />
-
-      <View style={styles.contentContainer}>
-        <View style={styles.searchContainer}>
-          <Ionicons name='search' size={25} color={"#aaa"} style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            onEndEditing={() => { if (typin.length < 1) { setIsEmpty(false); setData(datao); } }}
-            placeholderTextColor={'#aaa'}
-            placeholder={'Effectuez vos recherche ici ...'}
-            value={typin} onChangeText={text => { setTypin(text); Chertcha(text); }}
+      {loged ?
+        <>
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor="transparent"
+            translucent={true}
+            style={"light"}
           />
-        </View>
-        <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-          <Text style={styles.appointmentListTitle}>Listes des operateurs</Text>
-          <View style={styles.spacing} />
+          <View style={styles.headerContainer}>
+            <LinearGradient
+              colors={["#000", "red"]}
+              start={{ x: 0.3, y: 0.8 }}
+              end={{ x: 1.2, y: 0.8 }}
+              style={styles.headerGradient}
+            >
+              <View style={styles.headerContent}>
+                <Text style={{
+                  fontSize: 28,
+                  fontWeight: "bold",
+                  textTransform: "capitalize",
+                  color: "#e63900",
+                  fontStyle: "italic"
+                }}>Be</Text>
+                <Text style={{
+                  fontSize: 28,
+                  fontWeight: "bold",
+                  color: "#aaa",
+                  fontStyle: "italic"
+                }}>free </Text>
+                <TouchableOpacity style={styles.logoButton}>
+                  <Image source={picts.logo} resizeMode="contain" style={styles.logo} />
+                </TouchableOpacity>
+              </View>
+              <Text style={{
+                fontSize: 15,
+                color: "#aaa",
+              }}>{username}</Text>
+            </LinearGradient>
+          </View>
 
-          {data.length < 1 && (
-            <TouchableOpacity style={styles.emptyContainer} onPress={() => Reloader()}>
-              <View style={styles.emptyOverlay} />
-              {loading ? (
-                <ActivityIndicator visible={loading} color="#000" size={"large"} />
-              ) : (
-                <Ionicons name="refresh-outline" size={50} color={loaderro ? "red" : "#000"} />
-              )}
-              {loaderro && <Text style={styles.errorText}>Échec de chargement</Text>}
-              {!loading && !loaderro && <Text style={styles.emptyText}>Vide (actualiser)</Text>}
-            </TouchableOpacity>
-          )}
+          <View style={styles.headerContainerReoc}>
+
+          </View>
 
 
-          {data.length > 0 && data.map((enro, index) => (
-            <View key={enro.id} style={styles.appointmentCard}>
-              <TouchableOpacity
-                style={styles.appointmentButton}
-                onPress={() => navigation.navigate("Détails", { enrol: enro })}
-              >
-                <View style={styles.appointmentHeader}>
-                  <Text style={{ color: "#aaa" }}>{index + 1}</Text>
+          <View style={{ height: 45 }} />
 
-                  <Text style={styles.appointmentPhoneText}>{enro.nom} {enro.prenom}</Text>
-                </View>
-
-                <View style={styles.spacingHorizontal} />
-
-                <View style={styles.appointmentDetails}>
-                  <Text style={styles.appointmentDetailsText}>
-                    {enro.district.name} - {enro.inspecteur.name}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+          <View style={styles.contentContainer}>
+            <View style={styles.searchContainer}>
+              <Ionicons name='search' size={25} color={"#aaa"} style={styles.searchIcon} />
+              <TextInput
+                style={styles.searchInput}
+                onEndEditing={() => { if (typin.length < 1) { setIsEmpty(false); setData(datao); } }}
+                placeholderTextColor={'#aaa'}
+                placeholder={'Effectuez vos recherche ici ...'}
+                value={typin} onChangeText={text => { setTypin(text); Chertcha(text); }}
+              />
             </View>
-          ))}
-        </ScrollView>
-      </View>
+            <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
+              <Text style={styles.appointmentListTitle}>Listes des operateurs</Text>
+              <View style={styles.spacing} />
+
+              {data.length < 1 && (
+                <TouchableOpacity style={styles.emptyContainer} onPress={() => Reloader()}>
+                  <View style={styles.emptyOverlay} />
+                  {loading ? (
+                    <ActivityIndicator visible={loading} color="#000" size={"large"} />
+                  ) : (
+                    <Ionicons name="refresh-outline" size={50} color={loaderro ? "red" : "#000"} />
+                  )}
+                  {loaderro && <Text style={styles.errorText}>Échec de chargement</Text>}
+                  {!loading && !loaderro && <Text style={styles.emptyText}>Vide (actualiser)</Text>}
+                </TouchableOpacity>
+              )}
 
 
-      <TouchableOpacity style={
-        {
-          shadowOffset: {
-            width: 0,
-            height: 5,
-          },
-          shadowOpacity: 1,
-          shadowColor: '#ccc',
-          elevation: 5,
-          borderRadius: 15,
-          position: "absolute",
-          backgroundColor: "transparent",
-          zIndex: 20,
-          bottom: 20,
-          right: 15,
-        }
-      }
-        onPress={() => navigation.navigate("Enrôllement")}
-      >
+              {data.length > 0 && data.map((enro, index) => (
+                <View key={enro.id} style={styles.appointmentCard}>
+                  <TouchableOpacity
+                    style={styles.appointmentButton}
+                    onPress={() => navigation.navigate("Détails", { enrol: enro })}
+                  >
+                    <View style={styles.appointmentHeader}>
+                      <Text style={{ color: "#aaa" }}>{index + 1}</Text>
 
-        <LinearGradient
-          style={
+                      <Text style={styles.appointmentPhoneText}>{enro.nom} {enro.prenom}</Text>
+                    </View>
+
+                    <View style={styles.spacingHorizontal} />
+
+                    <View style={styles.appointmentDetails}>
+                      <Text style={styles.appointmentDetailsText}>
+                        {enro.district.name} - {enro.inspecteur.name}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              ))}
+              <View style={{height: 150}}/>
+            </ScrollView>
+          </View>
+
+
+          <TouchableOpacity style={
             {
-              padding: 8,
+              shadowOffset: {
+                width: 0,
+                height: 5,
+              },
+              shadowOpacity: 1,
+              shadowColor: '#ccc',
+              elevation: 5,
               borderRadius: 15,
-
+              position: "absolute",
+              backgroundColor: "transparent",
+              zIndex: 20,
+              bottom: 20,
+              right: 15,
             }
           }
-          colors={["#6fcaea", "#99e6ae"]}
-          start={{ x: 0, y: 1 }}
-          end={{ x: 1.5, y: 1 }}
-        >
+            onPress={() => navigation.navigate("Enrôllement")}
+          >
 
-          <MaterialCommunityIcons name="note-edit" size={25} style={{ color: '#333' }} />
-        </LinearGradient>
-      </TouchableOpacity>
+            <LinearGradient
+              style={
+                {
+                  padding: 8,
+                  borderRadius: 15,
 
+                }
+              }
+              colors={["#6fcaea", "#99e6ae"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 1.5, y: 1 }}
+            >
+
+              <MaterialCommunityIcons name="note-edit" size={25} style={{ color: '#333' }} />
+            </LinearGradient>
+          </TouchableOpacity>
+        </>
+        :
+        <View style={
+          {
+            height: "100%",
+            width: "100%",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center"
+
+          }
+        }>
+
+          <View style={
+            {
+              height: "50%",
+              width: "90%",
+              overflow: "hidden",
+            }
+          }>
+            <Image source={picts.logo} resizeMode="contain" style={styles.logo} />
+
+            <View style={
+              {
+                position: "absolute",
+                bottom: 20,
+                width: '100%',
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
+              }
+            }>
+              <Text style={{ color: 'red', fontStyle: "italic", fontWeight: "bold", fontSize: 32 }}>Be</Text>
+              <Text style={{ color: '#aaa', fontStyle: "italic", fontWeight: "bold", fontSize: 32 }}>free</Text>
+            </View>
+          </View>
+
+          <View>
+            <ActivityIndicator visible={loading} color="#000" size={"large"} />
+          </View>
+
+        </View>
+      }
     </View>
   );
 }
@@ -410,7 +474,7 @@ const styles = StyleSheet.create({
     color: '#009de0',
   },
   scrollView: {
-    height: 400,
+    height: Dimensions.get("window").height * 0.7,
     backgroundColor: "transparent",
     width: "100%",
     paddingVertical: 7,

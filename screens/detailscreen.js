@@ -5,7 +5,7 @@ export default function DetailScreen({ navigation, route }) {
     const { enrol } = route.params;
 
     return (
-        <ScrollView showsVerticalScrollIndicator="false" style={{ padding: "7%" }}>
+<ScrollView showsVerticalScrollIndicator={false} style={{ padding: "7%" }}>
             <View style={
                 [
                     hilai.inpt_contaner,

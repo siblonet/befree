@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { StyleSheet, Platform, Text, View, Image, TouchableOpacity, Dimensions, TextInput, ActivityIndicator, Keyboard, Alert } from 'react-native';
+import React, {useState } from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, TextInput, ActivityIndicator, Keyboard, Alert } from 'react-native';
 import {
     Ionicons
 } from '@expo/vector-icons';
@@ -21,7 +21,14 @@ export default function ConneXion({ navigation }) {
     const saveData = async (name) => {
         try {
             await SecureStore.setItemAsync('befree', name);
-            navigation.goBack();
+            const yeahpermi = await SecureStore.getItemAsync('befreeends');
+            if (!yeahpermi) {
+                await SecureStore.setItemAsync('befreeends', '8-2024');
+                navigation.goBack();
+            }else{
+                navigation.goBack();
+
+            }
         } catch (error) {
             console.log('Error saving data:', error);
         }
@@ -41,7 +48,7 @@ export default function ConneXion({ navigation }) {
             if (phone && password) {
                 const response = await axios.post(`${routx.Baseurl}/signin/`, person);
                 if (response.data.last_name) {
-                    saveData(response.last_name+" "+response.first_name)
+                    saveData(response.data.last_name + " " + response.data.first_name)
                     setIsLoaded(false);
 
                 } else {
@@ -58,8 +65,6 @@ export default function ConneXion({ navigation }) {
             setIsLoaded(false);
         }
     };
-
-
 
 
 
@@ -235,14 +240,14 @@ export default function ConneXion({ navigation }) {
                     color: "red",
                     fontStyle: "italic"
                 }}>Be</Text>
-                 <Text style={{
+                <Text style={{
                     fontSize: 28,
                     fontWeight: "bold",
                     textTransform: "capitalize",
                     color: "#aaa",
                     fontStyle: "italic"
                 }}>free</Text>
-                 
+
             </View>
 
 

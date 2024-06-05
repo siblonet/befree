@@ -45,7 +45,7 @@ export default function FormScreen({ navigation }) {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator="false" style={{ padding: "7%" }}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{ padding: "7%" }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}>
