@@ -281,9 +281,8 @@ export default function ConneXion({ navigation }) {
                     color: '#661400',
                 }}
                     placeholderTextColor={'#aaa'}
-                    placeholder={'Numéro de téléphone'}
+                    placeholder={'Nom Utilisateur'}
                     value={phone}
-                    keyboardType="phone-pad"
                     onChangeText={text => setPhone(text)}
                 />
 

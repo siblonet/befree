@@ -125,7 +125,7 @@ export default function DetailScreen({ navigation, route }) {
                 <Text style={hilai.text_self}>Numéro Téléphone Propriétaire Exploitation</Text>
                 <Text style={hilai.input_self}>{enrol.numero_telephone_proprietaire_exploitation}</Text>
             </View>
-            <View style={{ height: 150 }}></View>
+            <View style={{ height: 250 }}></View>
         </ScrollView>
     );
 }

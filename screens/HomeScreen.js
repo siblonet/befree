@@ -143,7 +143,7 @@ export default function DashBoard({ navigation }) {
 
   function Chertcha(typ) {
     if (datao) {
-      let filteredData = datao.filter(s => s.numero_identification_national.startsWith(typ, 0));
+      let filteredData = datao.filter(s => s.nom.startsWith(typ, 0));
       if (filteredData.length !== 0) {
         setIsEmpty(false);
         setData(filteredData);
@@ -232,7 +232,7 @@ export default function DashBoard({ navigation }) {
                 style={styles.searchInput}
                 onEndEditing={() => { if (typin.length < 1) { setIsEmpty(false); setData(datao); } }}
                 placeholderTextColor={'#aaa'}
-                placeholder={'Effectuez vos recherche ici ...'}
+                placeholder={'Recherche par nom ici ...'}
                 value={typin} onChangeText={text => { setTypin(text); Chertcha(text); }}
               />
             </View>
