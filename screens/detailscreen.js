@@ -202,21 +202,7 @@ export default function DetailScreen({ navigation, route }) {
                 <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.annee_naissance} onChangeText={(value) => handleChange('annee_naissance', value)} keyboardType="numeric" />
             </View>
 
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Prénom Propriétaire Exploitation</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.prenom_proprietaire_exploitation} onChangeText={(value) => handleChange('prenom_proprietaire_exploitation', value)} />
-            </View>
-
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Nom Propriétaire Exploitation</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.nom_proprietaire_exploitation} onChangeText={(value) => handleChange('nom_proprietaire_exploitation', value)} />
-            </View>
-
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Numéro Téléphone Propriétaire Exploitation</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.numero_telephone_proprietaire_exploitation} onChangeText={(value) => handleChange('numero_telephone_proprietaire_exploitation', value)} />
-            </View>
-
+    
 
             <View style={{ width: "100%", flexDirection: "row", paddingHorizontal: 10, paddingBottom: 15, justifyContent: "space-around" }}>
 

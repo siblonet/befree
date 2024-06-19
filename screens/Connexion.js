@@ -20,6 +20,8 @@ export default function ConneXion({ navigation }) {
 
     const saveData = async (name) => {
         try {
+            await SecureStore.deleteItemAsync('befree');
+            await SecureStore.deleteItemAsync('befreeends');
             await SecureStore.setItemAsync('befree', name);
             const yeahpermi = await SecureStore.getItemAsync('befreeends');
             if (!yeahpermi) {
@@ -45,6 +47,8 @@ export default function ConneXion({ navigation }) {
         };
 
         try {
+
+
             if (phone && password) {
                 const response = await axios.post(`${routx.Baseurl}/signin/`, person);
                 if (response.data.last_name) {
