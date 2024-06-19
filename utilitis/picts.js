@@ -1,4 +1,5 @@
 export const avatar = require("../assets/avatay.png");
+export const faceid = require("../assets/faceid.png");
 export const fingerprint = require("../assets/fingerprint.png");
 export const logo = require("../assets/befree.png");
 
@@ -25,6 +26,7 @@ export default {
 
 
     // F
+    faceid,
     fingerprint,
 
 

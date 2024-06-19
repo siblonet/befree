@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, ActivityIndicator, ScrollView, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TextInput, ActivityIndicator, ScrollView, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import { picts, routx } from "../utilitis";
+import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 export default function FormScreen({ navigation }) {
   const [sending, setSending] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null);
   const [formState, setFormState] = useState({
     identifiant_interne_exploitation: '',
     numero_etat_civil: '',
@@ -27,6 +30,8 @@ export default function FormScreen({ navigation }) {
     prenom_proprietaire_exploitation: '',
     nom_proprietaire_exploitation: '',
     numero_telephone_proprietaire_exploitation: '',
+    photo: capturedImage,
+
   });
 
   const handleChange = (name, value) => {
@@ -43,6 +48,32 @@ export default function FormScreen({ navigation }) {
         navigation.goBack();
       });
   };
+
+  const selectImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1
+      });
+
+      if (!result.canceled) {
+        const editedImage = await ImageManipulator.manipulateAsync(
+          result.assets[0].uri,
+          [{ resize: { width: 600, height: 600 } }],
+          {
+            compress: 1, format: ImageManipulator.SaveFormat.JPEG,
+            base64: true
+          }
+        );
+        setCapturedImage(editedImage.base64);
+      }
+    } catch (error) {
+      console.log('Error selecting image:', error);
+    }
+  };
+
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{ padding: "7%" }}>
@@ -192,6 +223,69 @@ export default function FormScreen({ navigation }) {
           <Text style={hilai.text_self}>Numéro Téléphone Propriétaire Exploitation</Text>
           <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.numero_telephone_proprietaire_exploitation} onChangeText={(value) => handleChange('numero_telephone_proprietaire_exploitation', value)} />
         </View>
+
+        <View style={{ width: "100%", flexDirection: "row", paddingHorizontal: 10, paddingBottom: 15, justifyContent: "space-around" }}>
+
+          <TouchableOpacity
+            style={{
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+            onPress={() => selectImage()}>
+
+            <TouchableOpacity style={
+              {
+                alignItems: "center",
+                justifyContent: "center",
+                height: 45,
+                width: 45,
+                borderRadius: 17,
+                backgroundColor: "transparent"
+              }
+            } onPress={() => selectImage()}>
+              <Image
+                source={picts.faceid}
+                resizeMode="center"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </TouchableOpacity>
+            <Text style={{ color: "#aaa" }}>Photo</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
+
+            <TouchableOpacity style={
+              {
+                alignItems: "center",
+                justifyContent: "center",
+                height: 40,
+                width: 40,
+                borderRadius: 17,
+                elevation: 5,
+                backgroundColor: "#eee"
+              }
+            }>
+              <Image
+                source={picts.fingerprint}
+                resizeMode="center"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </TouchableOpacity>
+            <Text style={{ color: "#aaa" }}>Emprinte</Text>
+          </TouchableOpacity>
+        </View>
+
+
 
         {sending ?
           <ActivityIndicator

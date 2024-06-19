@@ -80,7 +80,7 @@ export default function DashBoard({ navigation }) {
 
   const [data, setData] = useState([]);
   const [datao, setDatao] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [loaderro, setLoadderro] = useState(false);
   const [typin, setTypin] = useState("");
   const [isEmpty, setIsEmpty] = useState(false);
@@ -96,11 +96,15 @@ export default function DashBoard({ navigation }) {
         if (await chekingCorrection()) {
           axios.get(`${routx.Baseurl}/operateurs/`)
             .then((response) => {
-              setData(response.data.results);
+              //setData(response.data.results);
               setDatao(response.data.results);
+              setLoading(false);
+              setLoadderro(false)
               expirationService()
             })
             .catch((error) => {
+              setLoadderro(true)
+              setLoading(false);
               console.error(error);
             });
         } else {
@@ -143,7 +147,7 @@ export default function DashBoard({ navigation }) {
 
   function Chertcha(typ) {
     if (datao) {
-      let filteredData = datao.filter(s => s.nom.startsWith(typ, 0));
+      let filteredData = datao.filter(s => s.identifiant_interne_exploitation.startsWith(typ, 0));
       if (filteredData.length !== 0) {
         setIsEmpty(false);
         setData(filteredData);
@@ -155,6 +159,7 @@ export default function DashBoard({ navigation }) {
   }
 
 
+
   const Reloader = () => {
     setLoadderro(false);
     setLoading(true);
@@ -162,7 +167,7 @@ export default function DashBoard({ navigation }) {
     setDatao([]);
 
     axios.get(`${routx.Baseurl}/operateurs/`).then((response) => {
-      setData(response.data.results);
+      //setData(response.data.results);
       setDatao(response.data.results);
       setLoading(false);
 
@@ -170,10 +175,37 @@ export default function DashBoard({ navigation }) {
       console.log(error);
       setLoadderro(true);
       setLoading(false);
-
     });
 
   }
+
+  async function Disconnect_me() {
+    Alert.alert(
+      "Deconnexion",
+      "Êtes-vous sûr de vouloir vous déconnecter?",
+      [
+        {
+          text: 'Non',
+          onPress: () => console.log('Non pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Oui',
+          onPress: async () => {
+            try {
+              await SecureStore.deleteItemAsync('befree');
+              await SecureStore.deleteItemAsync('befreeends');
+              navigation.navigate('login');
+            } catch (error) {
+              console.log('Error retrieving data:', error);
+            }
+          },
+        },
+      ]
+    );
+  };
+
+
 
 
   return (
@@ -213,8 +245,19 @@ export default function DashBoard({ navigation }) {
               </View>
               <Text style={{
                 fontSize: 15,
-                color: "#aaa",
+                color: "#eee",
               }}>{username}</Text>
+
+              <TouchableOpacity style={{
+                padding: 10,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
+              }} onPress={() => Disconnect_me()}>
+                <Text style={{ fontStyle: "italic", color: "#aaa" }}>Deconnexion</Text>
+                <Ionicons name="chevron-forward-circle-outline" size={15} color={"#eee"} style={styles.searchIcon} />
+              </TouchableOpacity>
+
             </LinearGradient>
           </View>
 
@@ -223,24 +266,24 @@ export default function DashBoard({ navigation }) {
           </View>
 
 
-          <View style={{ height: 45 }} />
+          <View style={{ height: 20 }} />
 
           <View style={styles.contentContainer}>
             <View style={styles.searchContainer}>
               <Ionicons name='search' size={25} color={"#aaa"} style={styles.searchIcon} />
               <TextInput
                 style={styles.searchInput}
-                onEndEditing={() => { if (typin.length < 1) { setIsEmpty(false); setData(datao); } }}
+                onEndEditing={() => { if (typin.length < 1) { setIsEmpty(false); setData([]); } }}
                 placeholderTextColor={'#aaa'}
                 placeholder={'Recherche par nom ici ...'}
                 value={typin} onChangeText={text => { setTypin(text); Chertcha(text); }}
               />
             </View>
+
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
-              <Text style={styles.appointmentListTitle}>Listes des operateurs</Text>
               <View style={styles.spacing} />
 
-              {data.length < 1 && (
+              {datao.length < 1 && (
                 <TouchableOpacity style={styles.emptyContainer} onPress={() => Reloader()}>
                   <View style={styles.emptyOverlay} />
                   {loading ? (
@@ -252,6 +295,7 @@ export default function DashBoard({ navigation }) {
                   {!loading && !loaderro && <Text style={styles.emptyText}>Vide (actualiser)</Text>}
                 </TouchableOpacity>
               )}
+
 
 
               {data.length > 0 && data.map((enro, index) => (
@@ -276,7 +320,15 @@ export default function DashBoard({ navigation }) {
                   </TouchableOpacity>
                 </View>
               ))}
-              <View style={{height: 150}}/>
+
+              {datao.length > 0 && (
+                <TouchableOpacity style={styles.emptyContainer}>
+                  <View style={styles.emptyOverlay} />
+                  <Ionicons name="people-circle-outline" size={50} color="#000" />
+                  <Text style={styles.emptyText}>{datao.length} (Operateur{datao.length > 1 ? "s" : ""})</Text>
+                </TouchableOpacity>
+              )}
+              <View style={{ height: 150 }} />
             </ScrollView>
           </View>
 
@@ -325,7 +377,8 @@ export default function DashBoard({ navigation }) {
             width: "100%",
             flex: 1,
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
+            backgroundColor: "#fff"
 
           }
         }>
@@ -377,13 +430,13 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 25,
     backgroundColor: "transparent",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   headerGradient: {
     height: "100%",
     width: "100%",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
 
   headerContainerReoc: {
@@ -391,7 +444,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderBottomRightRadius: 25,
     borderBottomLeftRadius: 25,
-    elevation: 2,
+    elevation: 5,
     shadowOffset: {
       width: 0,
       height: 7,

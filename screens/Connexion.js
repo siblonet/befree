@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, TextInput, ActivityIndicator, Keyboard, Alert } from 'react-native';
 import {
     Ionicons
@@ -25,7 +25,7 @@ export default function ConneXion({ navigation }) {
             if (!yeahpermi) {
                 await SecureStore.setItemAsync('befreeends', '8-2024');
                 navigation.goBack();
-            }else{
+            } else {
                 navigation.goBack();
 
             }
@@ -60,8 +60,7 @@ export default function ConneXion({ navigation }) {
                 setIsLoaded(false);
             }
         } catch (error) {
-            console.error("Error:", error);
-            Alert.alert("Information Rejetée", "Veillez saisir correctement vos identifiants");
+            Alert.alert("Errer incconu", error);
             setIsLoaded(false);
         }
     };
