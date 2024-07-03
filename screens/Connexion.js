@@ -47,18 +47,22 @@ export default function ConneXion({ navigation }) {
         };
 
         try {
-
-
             if (phone && password) {
-                const response = await axios.post(`${routx.Baseurl}/signin/`, person);
-                if (response.data.last_name) {
-                    saveData(response.data.last_name + " " + response.data.first_name)
-                    setIsLoaded(false);
+                await axios.post(`${routx.Baseurl}/signin/`, person)
+                    .then((response) => {
+                        if (response.data.last_name) {
+                            saveData(response.data.last_name + " " + response.data.first_name)
+                            setIsLoaded(false);
 
-                } else {
-                    Alert.alert("Information Rejetée", "Veillez saisir correctement vos identifiants");
-                    setIsLoaded(false);
-                }
+                        } else {
+                            Alert.alert("Information Rejetée", "Veillez saisir correctement vos identifiants");
+                            setIsLoaded(false);
+                        }
+                    })
+                    .catch((error) => {
+                        Alert.alert("Errer incconu", error);
+                        setIsLoaded(false);
+                    });
             } else {
                 Alert.alert("Vide Rejetée", "Veillez saisir vos identifiants");
                 setIsLoaded(false);
