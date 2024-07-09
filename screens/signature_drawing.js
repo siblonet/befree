@@ -8,7 +8,8 @@ import {
     Text,
     SafeAreaView,
     TouchableOpacity,
-    Image
+    Image,
+    Platform
 } from 'react-native';
 import Svg, { Polyline } from 'react-native-svg';
 import { StatusBar } from "expo-status-bar";
@@ -123,12 +124,12 @@ const SignatureDrawing = ({ navigation, route }) => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar style="dark" backgroundColor="transparent" />
-            <View style={styles.header}>
+            <TouchableOpacity style={styles.header} onPress={() => navigation.goBack()}>
                 <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                     <Ionicons name="chevron-back" size={25} style={{ fontWeight: "bold" }} color={'#007bff'} />
                 </TouchableOpacity>
                 <Text style={styles.headerText}>Signez a la main sur l'écran</Text>
-            </View>
+            </TouchableOpacity>
 
             <ViewShot ref={ref} options={{ format: 'png', quality: 1 }} >
                 {path.length > 0 && <GesturePath path={path} />}
@@ -158,12 +159,13 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff"
     },
     header: {
-        height: 40,
+        height: 70,
         width: "100%",
         flexDirection: "row",
         justifyContent: "flex-start",
         paddingHorizontal: "5%",
-        alignItems: "center"
+        alignItems: "center",
+        top: Platform.OS === "android" ? 50: 0,
     },
     backButton: {
         paddingHorizontal: 5,

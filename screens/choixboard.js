@@ -1,14 +1,74 @@
-import React from 'react';
-import { StyleSheet, ActivityIndicator, ScrollView, Text, Image, TouchableOpacity, TextInput, View, Alert, Dimensions } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useState, useCallback } from "react";
+import { StyleSheet, ActivityIndicator, ScrollView, Text, Image, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from "expo-linear-gradient";
-import { picts } from "../utilitis";
+import { picts, routx } from "../utilitis";
+import axios from "axios";
+import { useFocusEffect } from "@react-navigation/native"
 
+
+
+const fdaa = {
+    "ExtraExploitation": {},
+    "agricole": {},
+    "inspecteur": {},
+    "operateur": {
+        "__v": 0,
+        "_id": "668afe92e2bacf0b592621d2",
+        "annee_naissance": "1980",
+        "cooperative": {
+            "__v": 0,
+            "_id": "66888f10894767764689aeb1",
+            "categorie": "66887e00673362ed6bf8cd00",
+            "certificate": [Array],
+            "created": "2024-07-06T00:25:52.974Z",
+            "nom": "Befree"
+        },
+        "created": "2024-07-07T20:46:10.485Z",
+        "district": {
+            "name": "Vide"
+        },
+        "finger_print": "https://storage.googleapis.com/seeme-7a462.appspot.com/f55a2a1e-9d52-48c8-a7a0-fce5be589409A7B9DD6F-1D50-40DD-913C-33DB87912E37.jpg",
+        "genre": "FEMME",
+        "identifiant_interne_exploitation": "GA-BIA-001",
+        "localite": { "name": "Vide" },
+        "nom": "KOUSSI ",
+        "numero_etat_civil": "Vide",
+        "numero_identification_national": "C 0087 9636 26",
+        "numero_piece_identite": "Vide",
+        "numero_securite_sociale": "Vide",
+        "numero_telephone": "07-48-38-44-98",
+        "prenom": "AKISSI CHANTAL",
+        "qrcode": "GA-BIA-001",
+        "region_inspection": { "name": "Vide" },
+        "signature": "https://storage.googleapis.com/seeme-7a462.appspot.com/b952b269-15a2-4ae7-b6ca-f3f73fa9d827signature.png"
+    },
+    "proprierteur": {},
+    "travailleur": {}
+}
 
 export default function ChoxMenu({ navigation, route }) {
     const { enrol } = route.params;
+    const [completdata, setcompletdata] = useState({
+        "ExtraExploitation": {},
+        "agricole": {},
+        "inspecteur": {},
+        "proprierteur": {},
+        "travailleur": {}
+    });
 
+
+    useFocusEffect(
+        useCallback(() => {
+            const getSignle = async () => {
+                await axios.get(`${routx.Baseurl}/BefreeAgriculter/getByIdBefreeAgrulter/${enrol._id}`).then((dee) => {
+                    setcompletdata(dee.data)
+                }).catch((eroo) => console.log(eroo));
+            };
+            getSignle()
+        }, [])
+    );
 
 
 
@@ -21,10 +81,10 @@ export default function ChoxMenu({ navigation, route }) {
                 style={"dark"}
             />
             <View style={hilai.inpt_contaner}>
-                <TouchableOpacity style={{paddingHorizontal: 5, backgroundColor: "#fff", borderRadius: 10, width: 40}} onPress={() => navigation.goBack()}>
-                    <Ionicons name="chevron-back" size={25} style={{fontWeight: "bold"}} color={'#007bff'} />
+                <TouchableOpacity style={{ paddingHorizontal: 5, backgroundColor: "#fff", borderRadius: 10, width: 40 }} onPress={() => navigation.goBack()}>
+                    <Ionicons name="chevron-back" size={25} style={{ fontWeight: "bold" }} color={'#007bff'} />
                 </TouchableOpacity>
-                
+
                 <Text style={
                     {
                         fontWeight: "bold",
@@ -77,7 +137,7 @@ export default function ChoxMenu({ navigation, route }) {
 
 
             <View style={hilai.menuro}>
-                <TouchableOpacity style={hilai.emptyContainer} onPress={() => console.log("")}>
+                <TouchableOpacity style={hilai.emptyContainer} onPress={() => navigation.navigate("ExplotationAgricole", { enrol: completdata.agricole, agriculter: enrol._id })}>
                     <LinearGradient
                         style={
                             {
@@ -106,13 +166,13 @@ export default function ChoxMenu({ navigation, route }) {
                         <View style={{ height: 10 }}></View>
                         <Text style={hilai.emptyText}>EXPLOITATION AGRICOLE</Text>
 
-                        {!enrol.agriculture && <View style={{ height: 7 }}></View>}
-                        {!enrol.agriculture && <Text style={{ color: "red" }}>Vide</Text>}
+                        {!completdata.agricole.agriculter && <View style={{ height: 7 }}></View>}
+                        {!completdata.agricole.agriculter && <Text style={{ color: "red" }}>Vide</Text>}
                     </LinearGradient>
                 </TouchableOpacity>
 
 
-                <TouchableOpacity style={hilai.emptyContainer}>
+                <TouchableOpacity style={hilai.emptyContainer} onPress={() => navigation.navigate("Travailleur", { enrol: completdata.travailleur, agriculter: enrol._id })}>
                     <View style={hilai.emptyOverlay} />
                     <View style={{ padding: 3, borderRadius: 10 }}>
                         <Image
@@ -128,14 +188,14 @@ export default function ChoxMenu({ navigation, route }) {
 
                     <Text style={hilai.emptyText}>TRAVAILLEURS PAR L'EXPLOITATION AGRICOLE</Text>
 
-                    {!enrol.travailleur && <View style={{ height: 7 }}></View>}
-                    {!enrol.travailleur && <Text style={{ color: "red" }}>Vide</Text>}
+                    {!completdata.travailleur.agriculter && <View style={{ height: 7 }}></View>}
+                    {!completdata.travailleur.agriculter && <Text style={{ color: "red" }}>Vide</Text>}
                 </TouchableOpacity>
             </View>
             <View style={{ height: 10 }}></View>
 
             <View style={hilai.menuro}>
-                <TouchableOpacity style={hilai.emptyContainer} onPress={() => console.log("")}>
+                <TouchableOpacity style={hilai.emptyContainer} onPress={() => navigation.navigate("ProExp_Agr", { enrol: completdata.proprierteur, agriculter: enrol._id })}>
 
                     <LinearGradient
                         style={
@@ -165,13 +225,13 @@ export default function ChoxMenu({ navigation, route }) {
                         <View style={{ height: 10 }}></View>
                         <Text style={hilai.emptyText}>PROPRIÉTAIRE DE L'EXPLOITATION AGRICOLE</Text>
 
-                        {!enrol.propietaire && <View style={{ height: 7 }}></View>}
-                        {!enrol.propietaire && <Text style={{ color: "red" }}>Vide</Text>}
+                        {!completdata.proprierteur.agriculter && <View style={{ height: 7 }}></View>}
+                        {!completdata.proprierteur.agriculter && <Text style={{ color: "red" }}>Vide</Text>}
                     </LinearGradient>
                 </TouchableOpacity>
 
 
-                <TouchableOpacity style={hilai.emptyContainer}>
+                <TouchableOpacity style={hilai.emptyContainer} onPress={() => navigation.navigate("Inspecteur", { enrol: completdata.inspecteur, agriculter: enrol._id })}>
                     <View style={hilai.emptyOverlay} />
                     <View style={{ padding: 3, borderRadius: 10 }}>
                         <Image
@@ -187,8 +247,8 @@ export default function ChoxMenu({ navigation, route }) {
 
                     <Text style={hilai.emptyText}>DONNÉES D'INSPECTION INTERNE</Text>
 
-                    {!enrol.inspection && <View style={{ height: 7 }}></View>}
-                    {!enrol.inspection && <Text style={{ color: "red" }}>Vide</Text>}
+                    {!completdata.inspecteur.agriculter && <View style={{ height: 7 }}></View>}
+                    {!completdata.inspecteur.agriculter && <Text style={{ color: "red" }}>Vide</Text>}
                 </TouchableOpacity>
             </View>
 

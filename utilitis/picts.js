@@ -3,6 +3,7 @@ export const faceid = require("../assets/faceid.png");
 export const fingerprint = require("../assets/fingerprint.png");
 export const logo = require("../assets/befree.png");
 export const agricole = require("../assets/agricole.png");
+export const agricolea = require("../assets/aggicolea.png");
 
 export const qrcode = require("../assets/qrcode.png");
 export const signatur = require("../assets/signatur.png");
@@ -12,6 +13,7 @@ export const signatur = require("../assets/signatur.png");
 export default {
     // A
     agricole,
+    agricolea,
     avatar,
     // B
 

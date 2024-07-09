@@ -3,7 +3,6 @@ import { View, Text, Image, TextInput, ActivityIndicator, ScrollView, StyleSheet
 import axios from 'axios';
 import { picts, routx } from "../utilitis";
 import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from "expo-linear-gradient";
@@ -19,14 +18,10 @@ export default function OperateurAgricole({ navigation, route }) {
     const [numero_telephone, setnumero_telephone] = useState(enrol.numero_telephone ? enrol.numero_telephone : "0700000000");
     const [identifiant_interne_exploitation, setidentifiant_interne_exploitation] = useState(enrol.identifiant_interne_exploitation ? enrol.identifiant_interne_exploitation : "000000");
     const [numero_etat_civil, setnumero_etat_civil] = useState(enrol.numero_etat_civil ? enrol.numero_etat_civil : "");
-    const [numero_piece_identite, setnumero_piece_identite] = useState(enrol.numero_piece_identite ? enrol.numero_piece_identite : "");
     const [numero_securite_sociale, setnumero_securite_sociale] = useState(enrol.numero_securite_sociale ? enrol.numero_securite_sociale : "");
     const [numero_identification_national, setnumero_identification_national] = useState(enrol.numero_identification_national ? enrol.numero_identification_national : "");
     const [genre, setgenre] = useState(enrol.genre ? enrol.genre : "genre");
     const [annee_naissance, setannee_naissance] = useState(enrol.annee_naissance ? enrol.annee_naissance : "");
-    const [localite, setlocalite] = useState(enrol.localite ? enrol.localite.name ? enrol.localite.name : "" : "");
-    const [district, setdistrict] = useState(enrol.district ? enrol.district.name ? enrol.district.name : "" : "");
-    const [region_inspection, setregion_inspection] = useState(enrol.region_inspection ? enrol.region_inspection.name ? enrol.region_inspection.name : "" : "");
     const [cooperative, setcooperative] = useState(enrol.cooperative.nom ? enrol.cooperative.nom : "");
     const [document, setdocument] = useState(enrol.document ? enrol.document : "");
     const [qrcode, setqrcode] = useState(enrol.qrcode ? enrol.qrcode : "");
@@ -43,20 +38,10 @@ export default function OperateurAgricole({ navigation, route }) {
             numero_telephone: numero_telephone,
             identifiant_interne_exploitation: identifiant_interne_exploitation,
             numero_etat_civil: numero_etat_civil,
-            numero_piece_identite: numero_piece_identite,
             numero_securite_sociale: numero_securite_sociale,
             numero_identification_national: numero_identification_national,
             genre: genre,
             annee_naissance: annee_naissance,
-            localite: {
-                name: localite,
-            },
-            district: {
-                name: district,
-            },
-            region_inspection: {
-                name: region_inspection,
-            }
         }
         const respon = await axios.put(`${routx.Baseurl}/BefreeAgriculter/updateBefreeAgrulter/${enrol._id}`, operateur);
         if (respon.data.done) {
@@ -73,17 +58,18 @@ export default function OperateurAgricole({ navigation, route }) {
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
                 aspect: [1, 1],
-                quality: 1
+                quality: 1,
+                base64: true
             });
 
             if (!result.canceled) {
-                const imano = result.assets[0].uri.split('/').pop();
-
-                const response = await axios.post(`${routx.Baseurl}/boutique/uploadImage`, {
+                const imageDara = {
                     ima: result.assets[0].base64,
-                    nam: imano,
+                    nam: result.assets[0].uri.split('/').pop(),
                     old_image: null
-                });
+                }
+                setSending(true);
+                const response = await axios.post(`${routx.Baseurl}/boutique/uploadImage`, imageDara);
                 if (response.data.ima) {
                     setdocument(response.data.ima);
                     const respon = await axios.put(`${routx.Baseurl}/BefreeAgriculter/updateBefreeAgrulter/${enrol._id}`, {
@@ -98,9 +84,10 @@ export default function OperateurAgricole({ navigation, route }) {
                 } else {
                     alert("échèc")
                 }
-
+                setSending(false);
             }
         } catch (error) {
+            setSending(false);
             console.log('Error selecting image:', error);
         }
     };
@@ -113,17 +100,18 @@ export default function OperateurAgricole({ navigation, route }) {
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
                 aspect: [1, 1],
-                quality: 1
+                quality: 1,
+                base64: true
             });
 
             if (!result.canceled) {
-                const imano = result.assets[0].uri.split('/').pop();
-
-                const response = await axios.post(`${routx.Baseurl}/boutique/uploadImage`, {
+                const imageDaro = {
                     ima: result.assets[0].base64,
-                    nam: imano,
+                    nam: result.assets[0].uri.split('/').pop(),
                     old_image: null
-                });
+                }
+                setSending(true);
+                const response = await axios.post(`${routx.Baseurl}/boutique/uploadImage`, imageDaro);
 
                 if (response.data.ima) {
                     setfinger_print(response.data.ima);
@@ -138,10 +126,12 @@ export default function OperateurAgricole({ navigation, route }) {
                 } else {
                     alert("échèc")
                 }
+                setSending(false);
 
             }
         } catch (error) {
             console.log('Error selecting image:', error);
+            setSending(false);
         }
     };
 
@@ -233,14 +223,6 @@ export default function OperateurAgricole({ navigation, route }) {
                     <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={numero_etat_civil} onChangeText={(value) => setnumero_etat_civil(value)} />
                 </LinearGradient>
 
-                <LinearGradient style={hilai.inpt_contaner}
-                    colors={["#99e6ae", "#6fcaea"]}
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1.5, y: 1 }}
-                >
-                    <Text style={hilai.text_self}>Numéro Piece Identite</Text>
-                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={numero_piece_identite} onChangeText={(value) => setnumero_piece_identite(value)} />
-                </LinearGradient>
 
                 <LinearGradient style={hilai.inpt_contaner}
                     colors={["#99e6ae", "#6fcaea"]}
@@ -261,7 +243,6 @@ export default function OperateurAgricole({ navigation, route }) {
                 </LinearGradient>
 
 
-
                 <LinearGradient style={hilai.inpt_contaner}
                     colors={["#99e6ae", "#6fcaea"]}
                     start={{ x: 0, y: 1 }}
@@ -279,36 +260,6 @@ export default function OperateurAgricole({ navigation, route }) {
                     <Text style={hilai.text_self}>Année de Naissance</Text>
                     <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={annee_naissance} onChangeText={(value) => setannee_naissance(value)} keyboardType="numeric" />
                 </LinearGradient>
-
-
-                <LinearGradient style={hilai.inpt_contaner}
-                    colors={["#99e6ae", "#6fcaea"]}
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1.5, y: 1 }}
-                >
-                    <Text style={hilai.text_self}>Localité</Text>
-                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={localite.name} onChangeText={(value) => setlocalite(value)} />
-                </LinearGradient>
-
-                <LinearGradient style={hilai.inpt_contaner}
-                    colors={["#99e6ae", "#6fcaea"]}
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1.5, y: 1 }}
-                >
-                    <Text style={hilai.text_self}>District</Text>
-                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={district.name} onChangeText={(value) => setdistrict(value)} />
-                </LinearGradient>
-
-                <LinearGradient style={hilai.inpt_contaner}
-                    colors={["#99e6ae", "#6fcaea"]}
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1.5, y: 1 }}
-                >
-                    <Text style={hilai.text_self}>Région Inspection</Text>
-                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={region_inspection.name} onChangeText={(value) => setregion_inspection(value)} />
-                </LinearGradient>
-
-
 
 
                 <View style={hilai.menuro}>
@@ -505,10 +456,39 @@ export default function OperateurAgricole({ navigation, route }) {
                 <View style={{ height: 40 }}></View>
 
                 {edidata && (sending ?
-                    <ActivityIndicator
-                        visible={sending}
-                        color="#fff"
-                    />
+                    <LinearGradient
+                        style={
+                            {
+                                width: "100%",
+                                alignSelf: "center",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                overflow: "hidden",
+                                height: 50,
+                                borderRadius: 10,
+                                elevation: 2
+                            }
+                        }
+                        colors={["#6fcaea", "#007bff"]}
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 1.5, y: 1 }}
+                    >
+                        <TouchableOpacity style={{
+                            height: '100%',
+                            width: "100%",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}>
+                            <Text style={{ color: "#000", fontSize: 15 }}>En cours patientez</Text>
+
+                            <ActivityIndicator
+                                visible={sending}
+                                color="#000"
+                            />
+                        </TouchableOpacity>
+                    </LinearGradient>
+
 
                     :
                     <LinearGradient

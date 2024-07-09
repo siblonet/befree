@@ -2,12 +2,16 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import DashBoard from './screens/HomeScreen';
-import FormScreen from './screens/FormScreen';
+import EnrollerOperateurAgricole from './screens/FormScreen';
 import ConneXion from './screens/Connexion';
 import ChoxMenu from './screens/choixboard';
 import OperateurAgricole from './screens/operateur';
 import SignatureDrawing from './screens/signature_drawing';
+import Explotation_Agricole from './screens/explotation_agricole';
 
+import Travailleur from './screens/travailleur';
+import Proprierteur_Explotation_Agricole from './screens/proprieteur';
+import Inspecteur from './screens/inspaction';
 
 const Stack = createStackNavigator();
 
@@ -34,7 +38,23 @@ export default function App() {
         <Stack.Screen name="Détail sur l'opérateur" component={OperateurAgricole} options={{
           headerShown: false
         }} />
-        <Stack.Screen name="Enrôllement" component={FormScreen} />
+
+        <Stack.Screen name="ExplotationAgricole" component={Explotation_Agricole} options={{
+          headerShown: false
+        }} />
+        <Stack.Screen name="Enrollement" component={EnrollerOperateurAgricole} options={{
+          headerShown: false
+        }} />
+
+        <Stack.Screen name="Inspecteur" component={Inspecteur} options={{
+          headerShown: false
+        }} />
+        <Stack.Screen name="ProExp_Agr" component={Proprierteur_Explotation_Agricole} options={{
+          headerShown: false
+        }} />
+        <Stack.Screen name="Travailleur" component={Travailleur} options={{
+          headerShown: false
+        }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

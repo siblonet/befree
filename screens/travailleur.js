@@ -7,38 +7,32 @@ import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from "expo-linear-gradient";
 
 
-export default function Proprierteur_Explotation_Agricole({ navigation, route }) {
+export default function Travailleur({ navigation, route }) {
     const { enrol, agriculter } = route.params;
     const [sending, setSending] = useState(false);
 
-    const [prenom, setprenom] = useState(enrol.prenom ? enrol.prenom : "");
-    const [nom, setnom] = useState(enrol.nom ? enrol.nom : "");
-    const [numero_telephone, setnumero_telephone] = useState(enrol.numero_telephone ? enrol.numero_telephone : "");
-    const [numero_identification_national, setnumero_identification_national] = useState(enrol.numero_identification_national ? enrol.numero_identification_national : "");
-    const [genre, setgenre] = useState(enrol.genre ? enrol.genre : "");
+    const [nombre_travailleur_permanent, setnombre_travailleur_permanent] = useState(enrol.nombre_travailleur_permanent ? enrol.nombre_travailleur_permanent : "");
+    const [estimation_nombre_travailleurs_temporaires, setestimation_nombre_travailleurs_temporaires] = useState(enrol.estimation_nombre_travailleurs_temporaires ? enrol.estimation_nombre_travailleurs_temporaires : "");
     const [edidata, setEdidata] = useState(false);
 
 
     const handleSubmit = async () => {
         setSending(true);
         const operateur = {
-            prenom: prenom,
-            nom: nom,
-            numero_telephone: numero_telephone,
-            numero_identification_national: numero_identification_national,
-            genre: genre,
+            nombre_travailleur_permanent: nombre_travailleur_permanent,
+            estimation_nombre_travailleurs_temporaires: estimation_nombre_travailleurs_temporaires,
             agriculter: agriculter
         }
         if (enrol._id) {
-            const respon = await axios.put(`${routx.Baseurl}/BefreeAgriculter/updateByidBefreeProprieteurAgricole/${enrol._id}`, operateur);
+            const respon = await axios.put(`${routx.Baseurl}/BefreeAgriculter/updateByidBefreeTravailleurAgricole/${enrol._id}`, operateur);
             if (respon.data.done) {
                 navigation.goBack()
             } else {
                 alert("échèc")
             };
         } else {
-            const respon = await axios.post(`${routx.Baseurl}/BefreeAgriculter/postBefreeProprieteurAgricole`, operateur);
-            if (respon.data.prenom) {
+            const respon = await axios.post(`${routx.Baseurl}/BefreeAgriculter/postBefreeTravailleurAgricole`, operateur);
+            if (respon.data.nombre_travailleur_permanent) {
                 navigation.goBack()
             } else {
                 alert("échèc")
@@ -100,9 +94,10 @@ export default function Proprierteur_Explotation_Agricole({ navigation, route })
                         color: "#007bff"
                     }
 
-                }>PROPRIÉTAIRE DE L'EXPLOITATION AGRICOLE</Text>
+                }>TRAVAILLEURS PAR L'EXPLOITATION AGRICOLE</Text>
 
             </View>
+
 
             <ScrollView showsVerticalScrollIndicator={false}>
                 <LinearGradient style={hilai.inpt_contaner}
@@ -110,8 +105,8 @@ export default function Proprierteur_Explotation_Agricole({ navigation, route })
                     start={{ x: 0, y: 1 }}
                     end={{ x: 1.5, y: 1 }}
                 >
-                    <Text style={hilai.text_self}>Prénom</Text>
-                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={prenom} onChangeText={(value) => setprenom(value)} />
+                    <Text style={hilai.text_self}>Nombre de travailleurs permanents</Text>
+                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={nombre_travailleur_permanent} onChangeText={(value) => setnombre_travailleur_permanent(value)} />
                 </LinearGradient>
 
                 <LinearGradient style={hilai.inpt_contaner}
@@ -119,37 +114,8 @@ export default function Proprierteur_Explotation_Agricole({ navigation, route })
                     start={{ x: 0, y: 1 }}
                     end={{ x: 1.5, y: 1 }}
                 >
-                    <Text style={hilai.text_self}>Nom</Text>
-                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={nom} onChangeText={(value) => setnom(value)} />
-                </LinearGradient>
-
-                <LinearGradient style={hilai.inpt_contaner}
-                    colors={["#99e6ae", "#6fcaea"]}
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1.5, y: 1 }}
-                >
-                    <Text style={hilai.text_self}>Numéro Téléphone</Text>
-                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={numero_telephone} onChangeText={(value) => setnumero_telephone(value)} />
-                </LinearGradient>
-
-
-                <LinearGradient style={hilai.inpt_contaner}
-                    colors={["#99e6ae", "#6fcaea"]}
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1.5, y: 1 }}
-                >
-                    <Text style={hilai.text_self}>Numéro Identification National</Text>
-                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={numero_identification_national} onChangeText={(value) => setnumero_identification_national(value)} />
-                </LinearGradient>
-
-
-                <LinearGradient style={hilai.inpt_contaner}
-                    colors={["#99e6ae", "#6fcaea"]}
-                    start={{ x: 0, y: 1 }}
-                    end={{ x: 1.5, y: 1 }}
-                >
-                    <Text style={hilai.text_self}>Genre</Text>
-                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={genre} onChangeText={(value) => setgenre(value)} />
+                    <Text style={hilai.text_self}>Estimation du nombre de travailleurs temporaires par an</Text>
+                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={estimation_nombre_travailleurs_temporaires} onChangeText={(value) => setestimation_nombre_travailleurs_temporaires(value)} />
                 </LinearGradient>
 
 

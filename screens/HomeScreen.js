@@ -84,18 +84,21 @@ export default function DashBoard({ navigation }) {
 
   function Chertcha(typ) {
     if (typ.length > 9) {
+      setTypin("en cours...");
       setIsCherching(false);
       axios.get(`${routx.Baseurl}/BefreeAgriculter/ByIdItergetBefreeAgrulter/${typ}`)
         .then((agri) => {
           //console.log(agri.data);
-          if (agri.data.agriculter) {
-            setData([agri.data.agriculter]);
+          if (agri.data) {
+            setData([agri.data]);
             setIsCherching(true);
             setIsEmpty(false);
+            setTypin(typ);
           } else {
             setIsEmpty(true);
             setData([]);
             setIsCherching(true);
+            setTypin(typ);
           }
         })
         .catch((error) => {
@@ -104,6 +107,7 @@ export default function DashBoard({ navigation }) {
           setData([]);
           setLengtho(0);
           setIsCherching(true);
+          setTypin(typ);
         });
     }
   }
@@ -168,28 +172,33 @@ export default function DashBoard({ navigation }) {
           />
           <View style={styles.headerContainer}>
             <LinearGradient
-              colors={["#000", "red"]}
-              start={{ x: 0.3, y: 0.8 }}
-              end={{ x: 1.2, y: 0.8 }}
+              colors={["#80ac06", "#018346"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 0.3, y: 1.5 }}
               style={styles.headerGradient}
             >
               <View style={styles.headerContent}>
-                <Text style={{
-                  fontSize: 28,
-                  fontWeight: "bold",
-                  textTransform: "capitalize",
-                  color: "#e63900",
-                  fontStyle: "italic"
-                }}>Be</Text>
-                <Text style={{
-                  fontSize: 28,
-                  fontWeight: "bold",
-                  color: "#aaa",
-                  fontStyle: "italic"
-                }}>free </Text>
                 <TouchableOpacity style={styles.logoButton}>
-                  <Image source={picts.logo} resizeMode="contain" style={styles.logo} />
+                  <Image source={picts.agricolea} resizeMode="contain" style={styles.logo} />
                 </TouchableOpacity>
+
+                <View style={{ height: "100%", justifyContent: "center", backgroundColor: "transparent", height: 32 }}>
+                  <View style={{ flexDirection: "row", backgroundColor: "transparent", bottom: -7 }}>
+                    <Text style={{
+                      fontSize: 28,
+                      color: "#02b15f",
+                      fontWeight: "bold",
+                      backgroundColor: "transparent"
+                    }}>Befree</Text>
+                    <Text style={{
+                      fontSize: 28,
+                      color: "rgb(148, 199, 7)",
+                      fontWeight: "bold",
+                      backgroundColor: "transparent"
+                    }}>Volet</Text>
+                  </View>
+                  <Text style={{ color: "rgb(148, 199, 7)", fontWeight: "bold", fontSize: 28, backgroundColor: "transparent", top: -7 }}>Agriculture</Text>
+                </View>
               </View>
               <Text style={{
                 fontSize: 15,
@@ -303,7 +312,7 @@ export default function DashBoard({ navigation }) {
               right: 15,
             }
           }
-            onPress={() => navigation.navigate("Enrôllement")}
+            onPress={() => navigation.navigate("Enrollement")}
           >
 
             <LinearGradient
@@ -390,6 +399,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
+    paddingTop: "7%"
   },
 
   headerContainerReoc: {
@@ -403,8 +413,8 @@ const styles = StyleSheet.create({
       height: 7,
     },
     shadowOpacity: 0.5,
-    shadowColor: 'red',
-    backgroundColor: "red",
+    shadowColor: '#80ac06',
+    backgroundColor: "#80ac06",
     zIndex: -1,
     marginTop: -52
   },
@@ -416,12 +426,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   logoButton: {
-    height: 35,
-    width: 35,
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    padding: 2,
+    height: 70,
+    width: 60,
   },
+
   logo: {
     width: "100%",
     height: "100%",

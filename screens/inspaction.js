@@ -1,292 +1,222 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TextInput, ActivityIndicator, ScrollView, StyleSheet, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import { picts, routx } from "../utilitis";
-import * as ImagePicker from 'expo-image-picker';
-import * as ImageManipulator from 'expo-image-manipulator';
-import { Picker } from '@react-native-picker/picker';
 import { StatusBar } from 'expo-status-bar';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from "expo-linear-gradient";
 
 
-export default function DetailScreen({ navigation, route }) {
-    const { enrol } = route.params;
+export default function Inspecteur({ navigation, route }) {
+    const { enrol, agriculter } = route.params;
     const [sending, setSending] = useState(false);
-    const [capturedImage, setCapturedImage] = useState(null);
 
-    const [formState, setFormState] = useState({
-        identifiant_interne_exploitation: enrol.identifiant_interne_exploitation ? enrol.identifiant_interne_exploitation : "",
-        numero_etat_civil: enrol.numero_etat_civil ? enrol.numero_etat_civil : "",
-        numero_piece_identite: enrol.numero_piece_identite ? enrol.numero_piece_identite : "",
-        numero_securite_sociale: enrol.numero_securite_sociale ? enrol.numero_securite_sociale : "",
-        localite: enrol.localite ? enrol.localite : "",
-        district: enrol.district ? enrol.district : "",
-        region_inspection: enrol.region_inspection ? enrol.region_inspection : "",
-        superficie_exploitation: enrol.superficie_exploitation ? enrol.superficie_exploitation : "",
-        type_exploitation_agricole: enrol.type_exploitation_agricole ? enrol.type_exploitation_agricole : "petite",
-        nombre_unite_agricole: enrol.nombre_unite_agricole ? enrol.nombre_unite_agricole : "",
-        nombre_culture_certifiees: enrol.nombre_culture_certifiees ? enrol.nombre_culture_certifiees : "",
-        prenom: enrol.prenom ? enrol.prenom : "",
-        nom: enrol.nom ? enrol.nom : "",
-        numero_telephone: enrol.numero_telephone ? enrol.numero_telephone : "",
-        numero_identification_national: enrol.numero_identification_national ? enrol.numero_identification_national : "",
-        genre: enrol.genre ? enrol.genre : "H",
-        annee_naissance: enrol.annee_naissance ? enrol.annee_naissance : "",
-        prenom_proprietaire_exploitation: enrol.prenom_proprietaire_exploitation ? enrol.prenom_proprietaire_exploitation : "",
-        nom_proprietaire_exploitation: enrol.nom_proprietaire_exploitation ? enrol.nom_proprietaire_exploitation : "",
-        numero_telephone_proprietaire_exploitation: enrol.numero_telephone_proprietaire_exploitation ? enrol.numero_telephone_proprietaire_exploitation : "",
-        photo: capturedImage,
-    });
+    const [prenom, setprenom] = useState(enrol.prenom ? enrol.prenom : "");
+    const [nom, setnom] = useState(enrol.nom ? enrol.nom : "");
+    const [annee_inspection_interne, setannee_inspection_interne] = useState(enrol.annee_inspection_interne ? enrol.annee_inspection_interne : "");
+    const [mois_inspection_interne, setmois_inspection_interne] = useState(enrol.mois_inspection_interne ? enrol.mois_inspection_interne : "");
+    const [jour_inspection_interne, setjour_inspection_interne] = useState(enrol.jour_inspection_interne ? enrol.jour_inspection_interne : "");
+    const [edidata, setEdidata] = useState(false);
 
-    const handleChange = (name, value) => {
-        setFormState({ ...formState, [name]: value });
-    };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         setSending(true);
-        axios.post(`${routx.Baseurl}/manage-operateurs/`, formState)
-            .then(() => navigation.goBack())
-            .catch(error => {
-                console.error(error);
-                setSending(false);
-                navigation.goBack();
-            });
-    };
-
-    const selectImage = async () => {
-        try {
-            const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [1, 1],
-                quality: 1
-            });
-
-            if (!result.canceled) {
-                const editedImage = await ImageManipulator.manipulateAsync(
-                    result.assets[0].uri,
-                    [{ resize: { width: 600, height: 600 } }],
-                    {
-                        compress: 1, format: ImageManipulator.SaveFormat.JPEG,
-                        base64: true
-                    }
-                );
-                setCapturedImage(editedImage.base64);
-            }
-        } catch (error) {
-            console.log('Error selecting image:', error);
+        const operateur = {
+            prenom: prenom,
+            nom: nom,
+            annee_inspection_interne: annee_inspection_interne,
+            mois_inspection_interne: mois_inspection_interne,
+            jour_inspection_interne: jour_inspection_interne,
+            agriculter: agriculter
         }
+        if (enrol._id) {
+            const respon = await axios.put(`${routx.Baseurl}/BefreeAgriculter/updateByidBefreeInspecteurAgricole/${enrol._id}`, operateur);
+            if (respon.data.done) {
+                navigation.goBack()
+            } else {
+                alert("échèc")
+            };
+        } else {
+            const respon = await axios.post(`${routx.Baseurl}/BefreeAgriculter/postBefreeInspecteurAgricole`, operateur);
+            if (respon.data.nom) {
+                navigation.goBack()
+            } else {
+                alert("échèc")
+            };
+        }
+
+        setSending(true);
     };
-
-
-
-
 
 
 
     return (
-        <ScrollView showsVerticalScrollIndicator={false} style={{ padding: "7%" }}>
+        <View showsVerticalScrollIndicator={false} style={{ padding: "7%" }}>
             <StatusBar
-            barStyle="light-content"
-            backgroundColor="transparent"
-            translucent={true}
-            style={"dark"}
-          />
+                barStyle="light-content"
+                backgroundColor="transparent"
+                translucent={true}
+                style={"dark"}
+            />
             <View style={
-                [
-                    hilai.inpt_contaner,
-                    {
-                        backgroundColor: "transparent",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        textAlign: "center",
-                        height: 50,
-                    }
-                ]
+
+                {
+                    width: '100%',
+                    paddingVertical: '8%',
+                    flexDirection: "row",
+                    justifyContent: "space-between"
+                }
+
+            }>
+                <TouchableOpacity style={{ paddingHorizontal: 5, backgroundColor: "#fff", borderRadius: 10, width: 40 }} onPress={() => navigation.goBack()}>
+                    <Ionicons name="chevron-back" size={25} style={{ fontWeight: "bold" }} color={'#007bff'} />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ paddingHorizontal: 5, backgroundColor: "transparent", borderRadius: 10, width: 40 }} onPress={() => setEdidata(true)}>
+                    <MaterialCommunityIcons name="note-edit" size={25} style={{ fontWeight: "bold" }} color={'#6fcaea'} />
+                </TouchableOpacity>
+            </View>
+
+
+            <View style={
+
+                {
+                    paddingHorizontal: '2%',
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignSelf: "center",
+                    paddingVertical: "8%"
+                }
+
             }>
                 <Text style={
                     {
                         fontWeight: "bold",
-                        fontSize: 22,
+                        fontSize: 18,
                         textAlign: "center",
                         alignItems: "center",
                         alignSelf: "center",
                         justifyContent: "center",
-                        color: "#404040"
+                        color: "#007bff"
                     }
 
-                }>OPÉRATEUR</Text>
-
+                }>DONNÉES D'INSPECTION INTERNE</Text>
             </View>
 
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Identifiant Interne Exploitation</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.identifiant_interne_exploitation} onChangeText={(value) => handleChange('identifiant_interne_exploitation', value)} />
-            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <LinearGradient style={hilai.inpt_contaner}
+                    colors={["#99e6ae", "#6fcaea"]}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 1.5, y: 1 }}
+                >
+                    <Text style={hilai.text_self}>Prenom de l’inspecteur interne</Text>
+                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={prenom} onChangeText={(value) => setprenom(value)} />
+                </LinearGradient>
 
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Numéro Etat Civil</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.numero_etat_civil} onChangeText={(value) => handleChange('numero_etat_civil', value)} />
-            </View>
+                <LinearGradient style={hilai.inpt_contaner}
+                    colors={["#99e6ae", "#6fcaea"]}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 1.5, y: 1 }}
+                >
+                    <Text style={hilai.text_self}>Nom de l’inspecteur interne</Text>
+                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={nom} onChangeText={(value) => setnom(value)} />
+                </LinearGradient>
 
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Numéro Piece Identite</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.numero_piece_identite} onChangeText={(value) => handleChange('numero_piece_identite', value)} />
-            </View>
+                <LinearGradient style={hilai.inpt_contaner}
+                    colors={["#99e6ae", "#6fcaea"]}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 1.5, y: 1 }}
+                >
+                    <Text style={hilai.text_self}>Année de l’inspection interne</Text>
+                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={annee_inspection_interne} onChangeText={(value) => setannee_inspection_interne(value)} />
+                </LinearGradient>
 
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Numéro Sécurité Sociale</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.numero_securite_sociale} onChangeText={(value) => handleChange('numero_securite_sociale', value)} />
-            </View>
 
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Localité</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.localite} onChangeText={(value) => handleChange('localite', value)} />
-            </View>
+                <LinearGradient style={hilai.inpt_contaner}
+                    colors={["#99e6ae", "#6fcaea"]}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 1.5, y: 1 }}
+                >
+                    <Text style={hilai.text_self}>Mois de l’inspection interne</Text>
+                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={mois_inspection_interne} onChangeText={(value) => setmois_inspection_interne(value)} />
+                </LinearGradient>
 
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>District</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.district} onChangeText={(value) => handleChange('district', value)} />
-            </View>
 
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Région Inspection</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.region_inspection} onChangeText={(value) => handleChange('region_inspection', value)} />
-            </View>
+                <LinearGradient style={hilai.inpt_contaner}
+                    colors={["#99e6ae", "#6fcaea"]}
+                    start={{ x: 0, y: 1 }}
+                    end={{ x: 1.5, y: 1 }}
+                >
+                    <Text style={hilai.text_self}>Jour de l’inspection interne</Text>
+                    <TextInput editable={edidata} placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={jour_inspection_interne} onChangeText={(value) => setjour_inspection_interne(value)} />
+                </LinearGradient>
 
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Superficie Exploitation</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.superficie_exploitation} onChangeText={(value) => handleChange('superficie_exploitation', value)} keyboardType="numeric" />
-            </View>
 
-            <View style={[hilai.inpt_contaner, { height: 170 }]}>
-                <Text style={hilai.text_self}>Type Exploitation Agricole</Text>
-                <Picker style={{ backgroundColor: "#fff", borderRadius: 10, justifyContent: "center", height: "100%" }} selectedValue={formState.type_exploitation_agricole} onValueChange={(value) => handleChange('type_exploitation_agricole', value)}>
-                    <Picker.Item label="Petite Plantation" value="petite" />
-                    <Picker.Item label="Grande Plantation" value="grande" />
-                </Picker>
-            </View>
+                <View style={{ height: 40 }}></View>
 
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Nombre Unité Agricole</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.nombre_unite_agricole} onChangeText={(value) => handleChange('nombre_unite_agricole', value)} keyboardType="numeric" />
-            </View>
-
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Nombre Culture Certifiées</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.nombre_culture_certifiees} onChangeText={(value) => handleChange('nombre_culture_certifiees', value)} keyboardType="numeric" />
-            </View>
-
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Prénom</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.prenom} onChangeText={(value) => handleChange('prenom', value)} />
-            </View>
-
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Nom</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.nom} onChangeText={(value) => handleChange('nom', value)} />
-            </View>
-
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Numéro Téléphone</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.numero_telephone} onChangeText={(value) => handleChange('numero_telephone', value)} />
-            </View>
-
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Numéro Identification National</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.numero_identification_national} onChangeText={(value) => handleChange('numero_identification_national', value)} />
-            </View>
-
-            <View style={[hilai.inpt_contaner, { height: 170 }]}>
-                <Text style={hilai.text_self}>Genre</Text>
-                <Picker style={{ backgroundColor: "#fff", borderRadius: 10, justifyContent: "center", height: "100%" }} selectedValue={formState.genre} onValueChange={(value) => handleChange('genre', value)}>
-                    <Picker.Item label="Homme" value="H" />
-                    <Picker.Item label="Femme" value="F" />
-                </Picker>
-            </View>
-
-            <View style={hilai.inpt_contaner}>
-                <Text style={hilai.text_self}>Année de Naissance</Text>
-                <TextInput placeholder='Saissie ici' placeholderTextColor={"#ccc"} style={hilai.input_self} value={formState.annee_naissance} onChangeText={(value) => handleChange('annee_naissance', value)} keyboardType="numeric" />
-            </View>
-
-    
-
-            <View style={{ width: "100%", flexDirection: "row", paddingHorizontal: 10, paddingBottom: 15, justifyContent: "space-around" }}>
-
-                <TouchableOpacity
-                    style={{
-                        justifyContent: "center",
-                        alignItems: "center"
-                    }}
-                    onPress={() => selectImage()}>
-
-                    <TouchableOpacity style={
-                        {
-                            alignItems: "center",
-                            justifyContent: "center",
-                            height: 45,
-                            width: 45,
-                            borderRadius: 17,
-                            backgroundColor: "transparent"
-                        }
-                    } onPress={() => selectImage()}>
-                        <Image
-                            source={picts.faceid}
-                            resizeMode="center"
-                            style={{
+                {edidata && (sending ?
+                    <LinearGradient
+                        style={
+                            {
                                 width: "100%",
-                                height: "100%",
-                            }}
-                        />
-                    </TouchableOpacity>
-                    <Text style={{ color: "#aaa" }}>Photo</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={{
-                        justifyContent: "center",
-                        alignItems: "center"
-                    }}>
-
-                    <TouchableOpacity style={
-                        {
-                            alignItems: "center",
-                            justifyContent: "center",
-                            height: 40,
-                            width: 40,
-                            borderRadius: 17,
-                            elevation: 5,
-                            backgroundColor: "#eee"
+                                alignSelf: "center",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                overflow: "hidden",
+                                height: 50,
+                                borderRadius: 10,
+                                elevation: 2
+                            }
                         }
-                    }>
-                        <Image
-                            source={picts.fingerprint}
-                            resizeMode="center"
-                            style={{
+                        colors={["#6fcaea", "#007bff"]}
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 1.5, y: 1 }}
+                    >
+                        <TouchableOpacity style={{
+                            height: '100%',
+                            width: "100%",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}>
+                            <Text style={{ color: "#000", fontSize: 15 }}>En cours patientez</Text>
+
+                            <ActivityIndicator
+                                visible={sending}
+                                color="#000"
+                            />
+                        </TouchableOpacity>
+                    </LinearGradient>
+
+
+                    :
+                    <LinearGradient
+                        style={
+                            {
                                 width: "100%",
-                                height: "100%",
-                            }}
-                        />
-                    </TouchableOpacity>
-                    <Text style={{ color: "#aaa" }}>Emprinte</Text>
-                </TouchableOpacity>
-            </View>
-
-
-
-            {sending ?
-                <ActivityIndicator
-                    visible={sending}
-                    color="#fff"
-                />
-
-                :
-                <TouchableOpacity style={hilai.button} onPress={handleSubmit}>
-                    <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 22 }}>Modifier</Text>
-                </TouchableOpacity>
-            }
-            <View style={{ height: 250 }}></View>
-        </ScrollView>
+                                alignSelf: "center",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                overflow: "hidden",
+                                height: 50,
+                                borderRadius: 10,
+                                elevation: 2
+                            }
+                        }
+                        colors={["#6fcaea", "#007bff"]}
+                        start={{ x: 0, y: 1 }}
+                        end={{ x: 1.5, y: 1 }}
+                    >
+                        <TouchableOpacity
+                            style={hilai.button}
+                            onPress={() => handleSubmit()}>
+                            <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 22 }}>Modifier</Text>
+                        </TouchableOpacity>
+                    </LinearGradient>
+                )}
+                <View style={{ height: 300 }}></View>
+            </ScrollView>
+        </View>
     );
 }
 
@@ -294,12 +224,11 @@ const hilai = StyleSheet.create({
     inpt_contaner: {
         width: '100%',
         height: 90,
-        paddingHorizontal: '2%',
         backgroundColor: "#ccc",
-        marginBottom: "5%",
-        paddingVertical: '2%',
+        paddingTop: '2%',
         borderRadius: 10,
-        overflow: "hidden"
+        overflow: "hidden",
+        marginBottom: 25
     },
     input_self: {
         width: '100%',
@@ -311,16 +240,52 @@ const hilai = StyleSheet.create({
         color: "#404040"
     },
     text_self: {
-        color: "#333"
+        color: "#000",
+        paddingLeft: 10
     },
 
     button: {
         width: '100%',
-        backgroundColor: "#007bff",
-        paddingVertical: '5%',
-        borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
-        textAlign: "center"
-    }
+        textAlign: "center",
+        height: "100%"
+    },
+    menuro: {
+        flexDirection: "row",
+        width: "100%",
+        height: 200,
+        backgroundColor: "transparent",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    emptyContainer: {
+        shadowOffset: {
+            width: 0,
+            height: 5,
+        },
+        shadowOpacity: 1,
+        shadowColor: '#ccc',
+        elevation: 5,
+        borderRadius: 15,
+        backgroundColor: "transparent",
+        height: "100%",
+        width: "45%",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden"
+
+    },
+    emptyOverlay: {
+        position: "absolute",
+        height: "110%",
+        width: "110%",
+        backgroundColor: "#fff",
+        opacity: 1,
+        borderRadius: 20,
+    },
+    emptyText: {
+        textAlign: "center",
+        fontWeight: "bold"
+    },
 })
