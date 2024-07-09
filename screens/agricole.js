@@ -5,6 +5,7 @@ import { picts, routx } from "../utilitis";
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { Picker } from '@react-native-picker/picker';
+import { StatusBar } from 'expo-status-bar';
 
 
 export default function DetailScreen({ navigation, route }) {
@@ -84,6 +85,12 @@ export default function DetailScreen({ navigation, route }) {
 
     return (
         <ScrollView showsVerticalScrollIndicator={false} style={{ padding: "7%" }}>
+            <StatusBar
+            barStyle="light-content"
+            backgroundColor="transparent"
+            translucent={true}
+            style={"dark"}
+          />
             <View style={
                 [
                     hilai.inpt_contaner,
@@ -107,7 +114,7 @@ export default function DetailScreen({ navigation, route }) {
                         color: "#404040"
                     }
 
-                }>Détail Complet</Text>
+                }>OPÉRATEUR</Text>
 
             </View>
 

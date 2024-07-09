@@ -7,7 +7,7 @@ import { picts, routx } from "../utilitis";
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from "expo-linear-gradient";
 import * as SecureStore from 'expo-secure-store';
-import axios from "axios";
+import { thisiswhat, whatisthis } from "./convertisseur";
 
 const HEIGHT = Dimensions.get("window").height;
 
@@ -21,7 +21,6 @@ export default function ConneXion({ navigation }) {
     const saveData = async (name) => {
         try {
             await SecureStore.deleteItemAsync('befree');
-            await SecureStore.deleteItemAsync('befreeends');
             await SecureStore.setItemAsync('befree', name);
             const yeahpermi = await SecureStore.getItemAsync('befreeends');
             if (!yeahpermi) {
@@ -43,30 +42,37 @@ export default function ConneXion({ navigation }) {
 
         const person = {
             phone: phone,
-            password: password,
+            motdepass: password,
         };
 
         try {
             if (phone && password) {
-                await axios.post(`${routx.Baseurl}/signin/`, person)
-                    .then((response) => {
-                        if (response.data.last_name) {
-                            saveData(response.data.last_name + " " + response.data.first_name)
-                            setIsLoaded(false);
-
-                        } else {
-                            Alert.alert("Information Rejetée", "Veillez saisir correctement vos identifiants");
-                            setIsLoaded(false);
-                        }
-                    })
+                fetch(`${routx.Baseurl}/BefreeAccess/user_login/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(person),
+                }).then((response) => response.json()).then((data) => {
+                    if (data.token) {
+                        const splo = data.token.split("°");
+                        const userif = thisiswhat(`${splo[1]}`);
+                        saveData(userif);
+                        setIsLoaded(false);
+                    } else {
+                        Alert.alert("Information Rejetée", "Veillez saisir correctement vos identifiants");
+                        setIsLoaded(false);
+                    }
+                })
                     .catch((error) => {
-                        Alert.alert("Errer incconu", error);
+                        Alert.alert("Erreur inconnue", error.message);
                         setIsLoaded(false);
                     });
             } else {
                 Alert.alert("Vide Rejetée", "Veillez saisir vos identifiants");
                 setIsLoaded(false);
             }
+
         } catch (error) {
             Alert.alert("Errer incconu", error);
             setIsLoaded(false);

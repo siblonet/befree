@@ -8,83 +8,20 @@ import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
 import { picts, routx } from "../utilitis";
 
-const datoo = [
-  {
-    "annee_inspection_interne": 2023,
-    "annee_naissance": 1980,
-    "croissance_recolte": 0,
-    "district": {
-      "description": null,
-      "id": 1,
-      "name": "GAGNOA "
-    },
-    "estimation_totale_recolte": 1314,
-    "estimation_travailleurs_temporaires": 0,
-    "genre": "f",
-    "genre_proprietaire_exploitation": "",
-    "id": 1,
-    "identifiant_interne_exploitation": "GA-BIA-001",
-    "identifiant_national_exploitation": "",
-    "identifiant_unite_agricole": "GA-BIA-001 P1 ",
-    "inspecteur": {
-      "description": null,
-      "id": 1,
-      "name": "YAO N'GUESSAN LAMBERT "
-    },
-    "jour_inspection_interne": 2,
-    "latitute": "6.358055",
-    "localite": {
-      "description": null,
-      "id": 1,
-      "name": "BIAKOU"
-    },
-    "longitude": "-5.829862",
-    "mois_inspection_interne": 8,
-    "nom": "KOUSSI ",
-    "nom_proprietaire_exploitation": "",
-    "nombre_culture_certifiees": 2023,
-    "nombre_travailleurs_permanents": 0,
-    "nombre_unite_agricole": 1,
-    "numero_etat_civil": null,
-    "numero_identification_national": "C 0087 9636 26",
-    "numero_identification_national_proprietaire_exploitation": "",
-    "numero_piece_identite": "",
-    "numero_securite_sociale": "",
-    "numero_telephone": "07-48-38-44-98",
-    "numero_telephone_proprietaire_exploitation": "",
-    "prenom": "AKISSI CHANTAL",
-    "prenom_proprietaire_exploitation": "",
-    "produit_agricole": 1,
-    "recolte_totale_annee_precedente": 1312,
-    "region_inspection": {
-      "description": null,
-      "id": 1, "name": "GOH"
-    },
-    "rendement": 1,
-    "rendement_annee_precedente": 1,
-    "superficie_exploitation": 2.51,
-    "superficie_produits_agricoles": 2.51,
-    "superficie_unite_agricole": 2.51,
-    "type_exploitation_agricole": "petite",
-    "variete_produit_agricole": "",
-    "verification_latitute": "=IF(D3=0,\"\",D3)",
-    "verification_longitude": "=IF(E3=0,\"\",E3)",
-    "volume_vendu": 0
-  }
-]
-
 
 export default function DashBoard({ navigation }) {
   const [username, setusername] = useState('');
 
 
   const [data, setData] = useState([]);
-  const [datao, setDatao] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loaderro, setLoadderro] = useState(false);
   const [typin, setTypin] = useState("");
   const [isEmpty, setIsEmpty] = useState(false);
   const [loged, setLoged] = useState(false);
+  const [lengtho, setLengtho] = useState(0);
+  const [isCherching, setIsCherching] = useState(true);
+
   //npx expo install expo-splash-screen expo-system-ui react-native-gesture-handler react-native-reanimated react-native-safe-area-context react-native-screens react-native-svg
 
 
@@ -94,10 +31,10 @@ export default function DashBoard({ navigation }) {
     useCallback(() => {
       const checkAndFetchData = async () => {
         if (await chekingCorrection()) {
-          axios.get(`${routx.Baseurl}/operateurs/`)
-            .then((response) => {
-              //setData(response.data.results);
-              setDatao(response.data.results);
+          axios.get(`${routx.Baseurl}/BefreeAgriculter/getAllBefreeAgrulter/0/100`)
+            .then((agri) => {
+              //console.log(agri.data.agrilength);
+              setLengtho(agri.data.agrilength);
               setLoading(false);
               setLoadderro(false)
               expirationService()
@@ -146,15 +83,28 @@ export default function DashBoard({ navigation }) {
 
 
   function Chertcha(typ) {
-    if (datao) {
-      let filteredData = datao.filter(s => s.identifiant_interne_exploitation.startsWith(typ, 0));
-      if (filteredData.length !== 0) {
-        setIsEmpty(false);
-        setData(filteredData);
-      } else {
-        setIsEmpty(true);
-        setData([]);
-      }
+    if (typ.length > 9) {
+      setIsCherching(false);
+      axios.get(`${routx.Baseurl}/BefreeAgriculter/ByIdItergetBefreeAgrulter/${typ}`)
+        .then((agri) => {
+          //console.log(agri.data);
+          if (agri.data.agriculter) {
+            setData([agri.data.agriculter]);
+            setIsCherching(true);
+            setIsEmpty(false);
+          } else {
+            setIsEmpty(true);
+            setData([]);
+            setIsCherching(true);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setIsEmpty(true);
+          setData([]);
+          setLengtho(0);
+          setIsCherching(true);
+        });
     }
   }
 
@@ -164,11 +114,9 @@ export default function DashBoard({ navigation }) {
     setLoadderro(false);
     setLoading(true);
     setData([]);
-    setDatao([]);
 
-    axios.get(`${routx.Baseurl}/operateurs/`).then((response) => {
-      //setData(response.data.results);
-      setDatao(response.data.results);
+    axios.get(`${routx.Baseurl}/BefreeAgriculter/getAllBefreeAgrulter/0/100`).then((agri) => {
+      setLengtho(agri.data.agrilength);
       setLoading(false);
 
     }).catch((error) => {
@@ -276,6 +224,7 @@ export default function DashBoard({ navigation }) {
                 onEndEditing={() => { if (typin.length < 1) { setIsEmpty(false); setData([]); } }}
                 placeholderTextColor={'#aaa'}
                 placeholder={'Recherche par nom ici ...'}
+                editable={isCherching}
                 value={typin} onChangeText={text => { setTypin(text); Chertcha(text); }}
               />
             </View>
@@ -283,26 +232,27 @@ export default function DashBoard({ navigation }) {
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
               <View style={styles.spacing} />
 
-              {datao.length < 1 && (
+              {lengtho < 1 || loaderro || isEmpty && (
                 <TouchableOpacity style={styles.emptyContainer} onPress={() => Reloader()}>
                   <View style={styles.emptyOverlay} />
                   {loading ? (
                     <ActivityIndicator visible={loading} color="#000" size={"large"} />
                   ) : (
-                    <Ionicons name="refresh-outline" size={50} color={loaderro ? "red" : "#000"} />
+                    <Ionicons name={isEmpty ? "search" : "refresh-outline"} size={50} color={loaderro ? "red" : "#000"} />
                   )}
                   {loaderro && <Text style={styles.errorText}>Échec de chargement</Text>}
-                  {!loading && !loaderro && <Text style={styles.emptyText}>Vide (actualiser)</Text>}
+                  {!loading && !loaderro && !isEmpty && <Text style={styles.emptyText}>Vide (actualiser)</Text>}
+                  {!loading && !loaderro && isEmpty && <Text style={styles.emptyText}>{typin} N'e exist pas !</Text>}
                 </TouchableOpacity>
               )}
 
 
 
               {data.length > 0 && data.map((enro, index) => (
-                <View key={enro.id} style={styles.appointmentCard}>
+                <View key={enro._id} style={styles.appointmentCard}>
                   <TouchableOpacity
                     style={styles.appointmentButton}
-                    onPress={() => navigation.navigate("Détails", { enrol: enro })}
+                    onPress={() => navigation.navigate("Option sur Opérateur", { enrol: enro })}
                   >
                     <View style={styles.appointmentHeader}>
                       <Text style={{ color: "#aaa" }}>{index + 1}</Text>
@@ -314,18 +264,21 @@ export default function DashBoard({ navigation }) {
 
                     <View style={styles.appointmentDetails}>
                       <Text style={styles.appointmentDetailsText}>
-                        {enro.district.name} - {enro.inspecteur.name}
+                        Tél: {enro.numero_telephone}
+                      </Text>
+                      <Text style={styles.appointmentDetailsText}>
+                        Coop: {enro.cooperative.nom ? enro.cooperative.nom : "Be Free"}
                       </Text>
                     </View>
                   </TouchableOpacity>
                 </View>
               ))}
 
-              {datao.length > 0 && (
+              {lengtho > 0 && !loaderro && !isEmpty && (
                 <TouchableOpacity style={styles.emptyContainer}>
                   <View style={styles.emptyOverlay} />
                   <Ionicons name="people-circle-outline" size={50} color="#000" />
-                  <Text style={styles.emptyText}>{datao.length} (Operateur{datao.length > 1 ? "s" : ""})</Text>
+                  <Text style={styles.emptyText}>{lengtho} (Agriculteur{lengtho > 1 ? "s" : ""})</Text>
                 </TouchableOpacity>
               )}
               <View style={{ height: 150 }} />
@@ -611,9 +564,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   appointmentDetails: {
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
-    alignSelf: "flex-start",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
   },
   appointmentDetailsText: {
     fontSize: 14,
