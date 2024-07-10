@@ -244,7 +244,7 @@ export default function EnrollerOperateurAgricole({ navigation, route }) {
             <TouchableOpacity
               style={hilai.button}
               onPress={() => handleSubmit()}>
-              <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 22 }}>Modifier</Text>
+              <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 22 }}>Enrôler</Text>
             </TouchableOpacity>
           </LinearGradient>
         }

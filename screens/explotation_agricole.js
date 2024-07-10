@@ -21,7 +21,7 @@ export default function Explotation_Agricole({ navigation, route }) {
     const [nombre_unites_agricoles_pour_cette_exploitation, setnombre_unites_agricoles_pour_cette_exploitation] = useState(enrol.nombre_unites_agricoles_pour_cette_exploitation ? enrol.nombre_unites_agricoles_pour_cette_exploitation : "");
     const [edidata, setEdidata] = useState(false);
     const [longitude, setlongitude] = useState(enrol.longitude ? enrol.longitude : "");
-    const [latitute, setlatitute] = useState(enrol.longitude ? enrol.longitude : "");
+    const [latitute, setlatitute] = useState(enrol.latitute ? enrol.latitute : "");
 
 
     const handleSubmit = async () => {

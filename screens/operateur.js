@@ -352,6 +352,10 @@ export default function OperateurAgricole({ navigation, route }) {
                                 <Text style={{ position: "absolute", color: "#606060", alignSelf: "center", textAlign: "center", bottom: 5, fontWeight: "bold" }}>Qrcode (Vide)</Text>
 
                             )}
+                            {qrcode && (
+                                <Text style={{ position: "absolute", color: "#99e6ae", alignSelf: "center", textAlign: "center", bottom: 5, fontWeight: "bold" }}>Qrcode</Text>
+
+                            )}
                         </LinearGradient>
                     </TouchableOpacity>
                 </View>
@@ -446,7 +450,7 @@ export default function OperateurAgricole({ navigation, route }) {
 
                             )}
                             {finger_print && (
-                                <Text style={{ position: "absolute", color: "#fff", alignSelf: "center", textAlign: "center", bottom: 5, fontWeight: "bold" }}>Signature</Text>
+                                <Text style={{ position: "absolute", color: "#fff", alignSelf: "center", textAlign: "center", bottom: 5, fontWeight: "bold" }}>Emprinte</Text>
 
                             )}
                         </LinearGradient>
