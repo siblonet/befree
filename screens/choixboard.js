@@ -63,7 +63,7 @@ export default function ChoxMenu({ navigation, route }) {
         useCallback(() => {
             const getSignle = async () => {
                 await axios.get(`${routx.Baseurl}/BefreeAgriculter/getByIdBefreeAgrulter/${enrol._id}`).then((dee) => {
-                    setcompletdata(dee.data)
+                    setcompletdata(dee.data);
                 }).catch((eroo) => console.log(eroo));
             };
             getSignle()
@@ -101,7 +101,7 @@ export default function ChoxMenu({ navigation, route }) {
             </View>
 
 
-            <TouchableOpacity style={[hilai.emptyContainer, { height: 200, alignSelf: "center", width: "55%" }]} onPress={() => navigation.navigate("Détail sur l'opérateur", { enrol: enrol })}>
+            <TouchableOpacity style={[hilai.emptyContainer, { height: 200, alignSelf: "center", width: "55%" }]} onPress={() => navigation.navigate("Détail sur l'opérateur", { enrol: completdata.operateur })}>
 
                 <LinearGradient
                     style={

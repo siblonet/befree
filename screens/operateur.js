@@ -28,6 +28,7 @@ export default function OperateurAgricole({ navigation, route }) {
     const [finger_print, setfinger_print] = useState(enrol.finger_print ? enrol.finger_print : "");
     const [signature, setsignature] = useState(enrol.signature ? enrol.signature : "");
     const [edidata, setEdidata] = useState(false);
+    console.log(enrol);
 
 
     const handleSubmit = async () => {

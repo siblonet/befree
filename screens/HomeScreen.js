@@ -345,27 +345,27 @@ export default function DashBoard({ navigation }) {
           }
         }>
 
-          <View style={
-            {
-              height: "50%",
-              width: "90%",
-              overflow: "hidden",
-            }
-          }>
-            <Image source={picts.logo} resizeMode="contain" style={styles.logo} />
+          <View style={[styles.headerContent, { width: "90%", height: "50" }]}>
+            <TouchableOpacity style={styles.logoButton}>
+              <Image source={picts.agricolea} resizeMode="contain" style={styles.logo} />
+            </TouchableOpacity>
 
-            <View style={
-              {
-                position: "absolute",
-                bottom: 20,
-                width: '100%',
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }
-            }>
-              <Text style={{ color: 'red', fontStyle: "italic", fontWeight: "bold", fontSize: 32 }}>Be</Text>
-              <Text style={{ color: '#aaa', fontStyle: "italic", fontWeight: "bold", fontSize: 32 }}>free</Text>
+            <View style={{ height: "100%", justifyContent: "center", backgroundColor: "transparent", height: 32 }}>
+              <View style={{ flexDirection: "row", backgroundColor: "transparent", bottom: -7 }}>
+                <Text style={{
+                  fontSize: 28,
+                  color: "#02b15f",
+                  fontWeight: "bold",
+                  backgroundColor: "transparent"
+                }}>Befree</Text>
+                <Text style={{
+                  fontSize: 28,
+                  color: "rgb(148, 199, 7)",
+                  fontWeight: "bold",
+                  backgroundColor: "transparent"
+                }}>Volet</Text>
+              </View>
+              <Text style={{ color: "rgb(148, 199, 7)", fontWeight: "bold", fontSize: 28, backgroundColor: "transparent", top: -7 }}>Agriculture</Text>
             </View>
           </View>
 
