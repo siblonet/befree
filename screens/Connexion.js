@@ -96,7 +96,7 @@ export default function ConneXion({ navigation }) {
                         //zIndex: 2
                     }
                 }
-                colors={["#661400", "#17052e", "#17052e"]}
+                colors={["#80ac06", "#018346", "#018346"]}
                 start={{ x: 1, y: 0 }}
                 end={{ x: 2, y: 0.1 }}
             >
@@ -112,7 +112,7 @@ export default function ConneXion({ navigation }) {
                         borderBottomLeftRadius: 70
                     }
                 }
-                colors={["#17052e", "#661400"]}
+                colors={["#018346", "#80ac06"]}
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
@@ -133,7 +133,7 @@ export default function ConneXion({ navigation }) {
                         elevation: 5
                     }
                 }
-                colors={["#fff", "#661400"]}
+                colors={["#fff", "#018346"]}
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
@@ -152,7 +152,7 @@ export default function ConneXion({ navigation }) {
                         elevation: 5
                     }
                 }
-                colors={["#17052e", "#661400"]}
+                colors={["#018346", "#80ac06"]}
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
@@ -171,7 +171,7 @@ export default function ConneXion({ navigation }) {
                         elevation: 5
                     }
                 }
-                colors={["#17052e", "#661400"]}
+                colors={["#80ac06", "#018346"]}
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
@@ -191,7 +191,7 @@ export default function ConneXion({ navigation }) {
                         elevation: 5
                     }
                 }
-                colors={["#007fbb", "#f0687c"]}
+                colors={["#007fbb", "#018346"]}
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
@@ -209,7 +209,7 @@ export default function ConneXion({ navigation }) {
                         borderRadius: 10,
                     }
                 }
-                colors={["#17052e", "#661400"]}
+                colors={["#80ac06", "#018346"]}
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1, y: 1 }}
             >
@@ -223,13 +223,13 @@ export default function ConneXion({ navigation }) {
 
             <View style={{
                 width: "25.5%",
-                height: "12%",
-                backgroundColor: "#eee",
+                height: "15%",
+                backgroundColor: "transparent",
                 borderRadius: 55,
             }}
             >
                 <Image
-                    source={picts.logo}
+                    source={picts.agricolea}
                     resizeMode="cover"
                     style={{
                         width: "100%",
@@ -240,26 +240,12 @@ export default function ConneXion({ navigation }) {
 
             <View style={{
                 width: "100%",
-                height: "12%",
+                height: "5%",
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "row",
-                top: -20
             }}>
-                <Text style={{
-                    fontSize: 28,
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    color: "red",
-                    fontStyle: "italic"
-                }}>Be</Text>
-                <Text style={{
-                    fontSize: 28,
-                    fontWeight: "bold",
-                    textTransform: "capitalize",
-                    color: "#aaa",
-                    fontStyle: "italic"
-                }}>free</Text>
+                
 
             </View>
 
@@ -290,16 +276,14 @@ export default function ConneXion({ navigation }) {
                     backgroundColor: 'transparent',
                     fontSize: 17,
                     height: 30,
-                    width: "80%",
-                    color: '#661400',
+                    width: "90%",
+                    color: '#018346',
                 }}
                     placeholderTextColor={'#aaa'}
                     placeholder={'Nom Utilisateur'}
                     value={phone}
                     onChangeText={text => setPhone(text)}
                 />
-
-                <Ionicons name="call" size={20} color={'#aaa'} />
             </View>
 
             <View style={{ height: "5%" }}>
@@ -332,7 +316,7 @@ export default function ConneXion({ navigation }) {
                     fontSize: 17,
                     height: 30,
                     width: "80%",
-                    color: '#661400',
+                    color: '#018346',
                 }}
                     placeholderTextColor={'#aaa'}
                     placeholder={'Mot de passe'}
@@ -376,7 +360,7 @@ export default function ConneXion({ navigation }) {
                         alignSelf: "center"
                     }
                 }
-                colors={["#000", "red"]}
+                colors={["#018346", "#007bff"]}
                 start={{ x: 0, y: 1 }}
                 end={{ x: 1.5, y: 1 }}
             >
@@ -408,7 +392,7 @@ export default function ConneXion({ navigation }) {
 
 const hilai = StyleSheet.create({
     container: {
-        backgroundColor: '#17052e',
+        backgroundColor: '#018346',
         height: "100%",
         width: "100%",
         alignItems: 'center',
