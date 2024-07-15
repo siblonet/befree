@@ -287,7 +287,7 @@ export default function DashBoard({ navigation }) {
                 <TouchableOpacity style={styles.emptyContainer}>
                   <View style={styles.emptyOverlay} />
                   <Ionicons name="people-circle-outline" size={50} color="#000" />
-                  <Text style={styles.emptyText}>{lengtho} (Agriculteur{lengtho > 1 ? "s" : ""})</Text>
+                  <Text style={styles.emptyText}>{lengtho} Agriculteur{lengtho > 1 ? "s" : ""} - (RIA-ASCA)</Text>
                 </TouchableOpacity>
               )}
               <View style={{ height: 150 }} />
@@ -529,6 +529,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: "400",
     alignSelf: "center",
+    textAlign: "center"
   },
   appointmentCard: {
     borderRadius: 12,
