@@ -64,7 +64,9 @@ export default function DashBoard({ navigation }) {
   };
 
   const expirationService = async () => {
-    const date = new Date();
+    setLoged(false);
+
+    /*const date = new Date();
     const currentMonth = date.getMonth();
     const yeahpe = await SecureStore.getItemAsync('befreeends');
     if (yeahpe) {
@@ -77,7 +79,7 @@ export default function DashBoard({ navigation }) {
     } else {
       setLoged(false)
 
-    }
+    }*/
 
   };
 
