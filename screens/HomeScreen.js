@@ -64,7 +64,7 @@ export default function DashBoard({ navigation }) {
   };
 
   const expirationService = async () => {
-    setLoged(false);
+    setLoged(true);
 
     /*const date = new Date();
     const currentMonth = date.getMonth();
